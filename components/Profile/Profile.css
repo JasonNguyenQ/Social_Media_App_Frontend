@@ -1,0 +1,61 @@
+:root{
+  --default-profile-color: hsl(0, 0%, 80%);
+  --profile-picture-size: 150px;
+  --border-size: 25px;
+  --margin-indent: 10%;
+}
+
+body{
+  margin: 0;
+  font-family:'Franklin Gothic Medium';
+}
+
+.profile-container{
+  position: relative;
+  background-color: var(--default-profile-color);
+  width: 100vw;
+  height: 170px;
+  margin-bottom: calc(var(--profile-picture-size)/2 + var(--border-size));
+}
+
+.profile-information{
+  display: flex;
+  padding-top: 10px;
+  margin-left: calc(var(--profile-picture-size)/2 + var(--margin-indent) + var(--border-size));
+  gap: 20px
+}
+
+.large{
+  font-size: xx-large;
+  margin-right: calc(var(--margin-indent)/3);
+}
+
+.about{
+  padding: 10px;
+  width: calc(100vw - var(--margin-indent)*2);
+  overflow-wrap: break-word;
+  margin-left: var(--margin-indent);
+  border-radius: 5px;
+  border: 1px solid black
+}
+
+img {
+  object-fit: cover;
+}
+
+.bg-image{
+  width: 100%;
+  height: 100%;
+}
+
+.pfp{
+  position: absolute;
+  top: 100%;
+  left: var(--margin-indent);
+  transform: translate(-50%, -50%);
+  border: var(--border-size) solid white;
+  border-radius: 50%;
+  background-color: var(--default-profile-color);
+  width: var(--profile-picture-size);
+  height: var(--profile-picture-size);
+}

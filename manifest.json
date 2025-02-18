@@ -1,0 +1,13 @@
+{
+    "name": "My Web App",
+    "icons": [
+      {
+        "src": "/github192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "prefer_related_applications": false
+  }

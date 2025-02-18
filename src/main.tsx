@@ -1,0 +1,39 @@
+import { createRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import ProtectedRoutes from './ProtectedRoutes.tsx';
+import Messages from '../components/Messages/Messages.tsx';
+import Explore from '../components/Explore/Explore.tsx';
+import SignUp from '../components/Register/SignUp.tsx';
+import Login from '../components/Register/Login.tsx';
+import Profile from '../components/Profile/Profile.tsx';
+import Search from '../components/Search/Search.tsx';
+
+window.addEventListener('load', ()=>{
+  if (typeof navigator.serviceWorker !== 'undefined'){
+    navigator.serviceWorker.register('sw.js')
+  }
+})
+
+const queryClient = new QueryClient()
+
+createRoot(document.getElementById('root')!).render(
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<Login/>}/>
+          <Route path="/register" element={<SignUp/>}/>
+          <Route path="/search/:userid" element={<Search/>}/>
+
+          <Route element={<ProtectedRoutes/>}>
+            <Route path="/messages" element={<Messages/>}/>
+            <Route path="/explore" element={<Explore/>}/>
+            <Route path="/profile" element={<Profile/>}/>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </HelmetProvider>
+)
