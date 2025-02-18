@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { ProfileProps } from '../../constants/types'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import './Search.css'
 import fetchUser from '../../api/fetchUser'
 import Navbar from '../Navbar/Navbar'
+import { APP_NAME } from '../../constants/globals'
 import { acceptFriend, addFriend, getFriendStatus, removeFriend } from '../../api/friends'
 
 export default function Search(){
@@ -65,6 +67,10 @@ export default function Search(){
     }
     return (
         <>
+            <Helmet>
+                <title>"{userInfo.username}" | {APP_NAME}</title>
+                <meta name='description' content='User Profile Page' />
+            </Helmet>
             <Navbar/>
             <div className="profile-container" style={{
                 minHeight: '100svh',

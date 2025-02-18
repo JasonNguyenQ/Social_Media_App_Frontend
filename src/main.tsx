@@ -11,7 +11,7 @@ import Profile from '../components/Profile/Profile.tsx';
 import Search from '../components/Search/Search.tsx';
 
 window.addEventListener('load', ()=>{
-  if (typeof navigator.serviceWorker !== 'undefined'){
+  if (typeof navigator.serviceWorker !== 'undefined' && !location.href.includes('/search/')){
     navigator.serviceWorker.register('sw.js')
   }
 })
