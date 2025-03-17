@@ -1,80 +1,92 @@
-.form{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 30%;
-    padding: 20px;
-    transform: translate(-50%,-50%);
-    background-color: hsl(0, 0%, 90%);
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px 0px hsl(0, 0%, 50%);
+#login-page .form,
+#signup-page .form {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 30%;
+	padding: 20px;
+	transform: translate(-50%, -50%);
+	background-color: hsl(0, 0%, 90%);
+	border-radius: 10px;
+	box-shadow: 0px 0px 5px 0px hsl(0, 0%, 50%);
 }
 
-.form > h2 {
-    text-align: center;
+#login-page .form > h2,
+#signup-page .form > h2 {
+	text-align: center;
 }
 
-.form > fieldset {
-    font-size: large;
-    margin-bottom: 25px;
-    padding: 10px 20px;
-    border: 1px solid black;
-    border-radius: 5px;
+#login-page .form > fieldset,
+#signup-page .form > fieldset {
+	font-size: large;
+	margin-bottom: 25px;
+	padding: 10px 20px;
+	border: 1px solid black;
+	border-radius: 5px;
 }
 
-.input-field {
-    font-size: medium;
-    flex-grow: 1;
-    width: 100%;
-    margin-bottom: 5px;
-    overflow: hidden;
+#login-page .input-field,
+#signup-page .input-field {
+	font-size: medium;
+	flex-grow: 1;
+	width: 100%;
+	margin-bottom: 5px;
+	overflow: hidden;
 }
 
-.input-field > label {
-    margin-left: 2%;
-    margin-bottom: 5px;
-    display: block;
+#login-page .input-field > label,
+#signup-page .input-field > label {
+	margin-left: 2%;
+	margin-bottom: 5px;
+	display: block;
 }
 
-.input-field > input {
-    width: 100%;
-    border-radius: 50px;
-    border: none;
-    padding: 10px 20px;
-    box-sizing: border-box;
+#login-page .input-field > input,
+#signup-page .input-field > input {
+	width: 100%;
+	border-radius: 50px;
+	border: none;
+	padding: 10px 20px;
+	box-sizing: border-box;
 }
 
-.input-field > input:focus {
-    border: none;
-    outline: none;
+#login-page .input-field > input:focus,
+#signup-page .input-field > input:focus {
+	border: none;
+	outline: none;
 }
 
-.form > button {
-    cursor: pointer;
-    width: 100%;
-    height: 30px;
-    border: 1px solid black;
-    border-radius: 5px;
+#login-page .form > button,
+#signup-page .form > button {
+	cursor: pointer;
+	width: 100%;
+	height: 30px;
+	border: 1px solid hsl(0, 0%, 40%);
+	border-radius: 5px;
 }
 
-.form > button:hover {
-    background-color: hsl(0, 0%, 80%);
+#login-page .form > button:hover,
+#signup-page .form > button:hover {
+	background-color: hsl(0, 0%, 80%);
 }
 
-.form-footer{
-    padding: 10px;
-    text-align: center;
+#login-page .form-footer,
+#signup-page .form-footer {
+	padding: 10px;
+	text-align: center;
 }
 
-.redirect-form {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin: 5px;
+#login-page .redirect-form,
+#signup-page .redirect-form {
+	display: flex;
+	justify-content: center;
+	gap: 5px;
+	margin: 5px;
 }
 
-.form a{
-    color: hsl(240, 50%, 50%);
-    font-weight: bold;
+#login-page .form a,
+#signup-page .form a {
+	color: hsl(240, 50%, 50%);
+	font-weight: bold;
 }

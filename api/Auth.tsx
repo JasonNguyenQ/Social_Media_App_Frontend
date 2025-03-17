@@ -4,8 +4,9 @@ export default async function Authorize(token: string | null) : Promise<UserIden
     try{
         const response = await fetch(`${BASE_URL}/auth/authenticate`, {
             method: 'GET',
+            credentials: "include",
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
             }
         })
         const data: UserIdentifier = await response.json()

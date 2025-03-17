@@ -8,7 +8,7 @@ const VALIDATION_TIME = 60*60*1000
 export default function ProtectedRoutes(){
     const location = useLocation()
     const token = sessionStorage.getItem(ACCESS_KEY)
-
+    
     const {data: userInfo, isLoading} = useQuery({
         queryKey: ["auth", {token}],
         queryFn: async () => await Authorize(token),

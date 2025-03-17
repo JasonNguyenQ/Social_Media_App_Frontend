@@ -5,6 +5,7 @@ export async function getFriendStatus(userid: number){
         const token = sessionStorage.getItem(ACCESS_KEY)
         const response = await fetch(`${BASE_URL}/api/friends/${userid}`, {
             method: "GET",
+            credentials: "include",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -23,6 +24,7 @@ export async function addFriend(userid: number){
         const token = sessionStorage.getItem(ACCESS_KEY)
         await fetch(`${BASE_URL}/api/friends/`, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -40,6 +42,7 @@ export async function acceptFriend(userid: number){
         const token = sessionStorage.getItem(ACCESS_KEY)
         await fetch(`${BASE_URL}/api/friends/${userid}`, {
             method: "PUT",
+            credentials: "include",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -56,6 +59,7 @@ export async function removeFriend(userid: number){
         const token = sessionStorage.getItem(ACCESS_KEY)
         await fetch(`${BASE_URL}/api/friends/${userid}`, {
             method: "DELETE",
+            credentials: "include",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"

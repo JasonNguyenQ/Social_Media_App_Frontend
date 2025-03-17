@@ -6,6 +6,7 @@ export async function getThreads(): Promise<ThreadInfo[]>{
         const token = sessionStorage.getItem(ACCESS_KEY)
         const response = await fetch(`${BASE_URL}/api/messages/threads`, {
             method: 'GET',
+            credentials: "include",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -23,9 +24,12 @@ export async function addMessage(variables : { threadId: string, message: string
         const { threadId, message } = variables
 
         if (threadId === "") return Promise.reject("Incomplete")
-            const token = sessionStorage.getItem(ACCESS_KEY)
+
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
         await fetch(`${BASE_URL}/api/messages`, {
             method: 'POST',
+            credentials: "include",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
@@ -45,6 +49,7 @@ export async function getMessages(threadId: string | undefined): Promise<Message
             const token = sessionStorage.getItem(ACCESS_KEY)
             const response = await fetch(`${BASE_URL}/api/messages/${threadId}`, {
                 method: 'GET',
+                credentials: "include",
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
