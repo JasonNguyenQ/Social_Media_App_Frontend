@@ -1,7 +1,7 @@
 #messages-page {
 	--container-height: 600px;
-	--message-self-color: hsl(240, 100%, 80%);
-	--message-other-color: hsl(120, 100%, 50%);
+	--message-self-color: hsl(240deg 100% 80%);
+	--message-other-color: hsl(120deg 100% 50%);
 	--message-roundness: 15px;
 	--message-input-height: 30px;
 	--message-container-padding: 20px;
@@ -15,33 +15,33 @@
 
 #messages-page .message-container {
 	display: flex;
-	position: relative;
 	flex-direction: column;
 	justify-content: end;
-	padding: var(--message-container-padding);
+	position: relative;
 	width: 100%;
 	height: var(--container-height);
+	padding: var(--message-container-padding);
 	overflow: hidden;
 }
 
 #messages-page .message-container::before {
 	position: absolute;
-	content: "";
 	left: 0;
 	width: 1px;
 	height: var(--container-height);
 	background-color: black;
+	content: "";
 }
 
 #messages-page .message-container > button {
+	align-self: center;
 	position: absolute;
 	bottom: calc((3 * var(--message-container-padding)));
 	padding: 5px 10px;
-	align-self: center;
 	border: none;
-	box-shadow: 0px 0px 5px 0px hsl(0, 0%, 30%);
-	background-color: hsl(0, 0%, 80%);
 	border-radius: 5px;
+	background-color: hsl(0deg 0% 80%);
+	box-shadow: 0 0 5px 0 hsl(0deg 0% 30%);
 	z-index: 1;
 }
 
@@ -52,20 +52,8 @@
 #messages-page .messages {
 	position: relative;
 	width: 100%;
+	overflow: hidden auto;
 	scrollbar-gutter: stable;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-
-#messages-page .self-message > .message-header {
-	text-align: end;
-}
-
-#messages-page .self-message > .message-content {
-	justify-self: end;
-	background-color: var(--message-self-color);
-	border-radius: var(--message-roundness);
-	border-bottom-right-radius: 0px;
 }
 
 #messages-page .message-header {
@@ -74,33 +62,44 @@
 	font-size: x-small;
 }
 
+#messages-page .self-message > .message-header {
+	text-align: end;
+}
+
 #messages-page .message-content {
+	width: fit-content;
 	margin: 0;
 	padding: 10px;
-	width: fit-content;
-	max-width: 50%;
-	font-family: Arial, Helvetica, sans-serif;
-	background-color: var(--message-other-color);
 	border-radius: var(--message-roundness);
-	border-bottom-left-radius: 0px;
+	background-color: var(--message-other-color);
+	font-family: Arial, Helvetica, sans-serif;
+	max-width: 50%;
+	border-bottom-left-radius: 0;
 	overflow-wrap: break-word;
+}
+
+#messages-page .self-message > .message-content {
+	justify-self: end;
+	border-radius: var(--message-roundness);
+	background-color: var(--message-self-color);
+	border-bottom-right-radius: 0;
 }
 
 #messages-page .message-field {
 	display: flex;
 	position: sticky;
+	bottom: 0;
 	width: auto;
 	height: 30px;
-	bottom: 0;
 }
 
 #messages-page .message-field > input {
-	padding: 5px 20px;
-	flex-grow: 1;
 	height: var(--message-input-height);
-	background-color: hsl(0, 0%, 90%);
-	border-radius: 10px 0px 0px 10px;
+	padding: 5px 20px;
 	border: none;
+	border-radius: 10px 0 0 10px;
+	background-color: hsl(0deg 0% 90%);
+	flex-grow: 1;
 	box-sizing: border-box;
 }
 
@@ -109,16 +108,16 @@
 }
 
 #messages-page .message-field > button {
-	height: var(--message-input-height);
-	background-color: hsl(0, 0%, 70%);
-	border: none;
-	border-radius: 0px 10px 10px 0px;
-	flex-grow: 0.05;
 	cursor: pointer;
+	height: var(--message-input-height);
+	border: none;
+	border-radius: 0 10px 10px 0;
+	background-color: hsl(0deg 0% 70%);
+	flex-grow: 0.05;
 }
 
 #messages-page .message-field > button:hover {
-	background-color: hsl(0, 0%, 60%);
+	background-color: hsl(0deg 0% 60%);
 }
 
 #messages-page .threads-container {
@@ -128,16 +127,16 @@
 
 #messages-page .thread {
 	cursor: pointer;
-	border-radius: 10px;
 	height: 20px;
 	margin: 10px;
 	padding: 10px;
+	border-radius: 10px;
 }
 
 #messages-page .active-thread {
-	background-color: hsl(0, 0%, 90%);
+	background-color: hsl(0deg 0% 90%);
 }
 
 #messages-page .thread:hover {
-	background-color: hsl(0, 0%, 80%);
+	background-color: hsl(0deg 0% 80%);
 }

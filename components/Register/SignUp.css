@@ -1,15 +1,15 @@
 #login-page .form,
 #signup-page .form {
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	width: 30%;
 	padding: 20px;
-	transform: translate(-50%, -50%);
-	background-color: hsl(0, 0%, 90%);
 	border-radius: 10px;
-	box-shadow: 0px 0px 5px 0px hsl(0, 0%, 50%);
+	background-color: hsl(0deg 0% 90%);
+	box-shadow: 0 0 5px 0 hsl(0deg 0% 50%);
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	transform: translate(-50%, -50%);
 }
 
 #login-page .form > h2,
@@ -19,35 +19,35 @@
 
 #login-page .form > fieldset,
 #signup-page .form > fieldset {
-	font-size: large;
 	margin-bottom: 25px;
 	padding: 10px 20px;
 	border: 1px solid black;
 	border-radius: 5px;
+	font-size: large;
 }
 
 #login-page .input-field,
 #signup-page .input-field {
-	font-size: medium;
-	flex-grow: 1;
 	width: 100%;
 	margin-bottom: 5px;
 	overflow: hidden;
+	font-size: medium;
+	flex-grow: 1;
 }
 
 #login-page .input-field > label,
 #signup-page .input-field > label {
-	margin-left: 2%;
-	margin-bottom: 5px;
 	display: block;
+	margin-bottom: 5px;
+	margin-left: 2%;
 }
 
 #login-page .input-field > input,
 #signup-page .input-field > input {
 	width: 100%;
-	border-radius: 50px;
-	border: none;
 	padding: 10px 20px;
+	border: none;
+	border-radius: 50px;
 	box-sizing: border-box;
 }
 
@@ -62,13 +62,13 @@
 	cursor: pointer;
 	width: 100%;
 	height: 30px;
-	border: 1px solid hsl(0, 0%, 40%);
+	border: 1px solid hsl(0deg 0% 40%);
 	border-radius: 5px;
 }
 
 #login-page .form > button:hover,
 #signup-page .form > button:hover {
-	background-color: hsl(0, 0%, 80%);
+	background-color: hsl(0deg 0% 80%);
 }
 
 #login-page .form-footer,
@@ -87,6 +87,6 @@
 
 #login-page .form a,
 #signup-page .form a {
-	color: hsl(240, 50%, 50%);
+	color: hsl(240deg 50% 50%);
 	font-weight: bold;
 }

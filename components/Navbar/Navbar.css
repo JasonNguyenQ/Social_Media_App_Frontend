@@ -1,43 +1,41 @@
-:root {
+#navbar {
 	--nav-background: white;
-	--background-clr-900: hsl(0, 0%, 90%);
-	--background-clr-700: hsl(0, 0%, 70%);
-	--background-clr-400: hsl(0, 0%, 40%);
+	--background-clr-900: hsl(0deg 0% 90%);
+	--background-clr-700: hsl(0deg 0% 70%);
+	--background-clr-400: hsl(0deg 0% 40%);
 	--search-min-width: 200px;
 	--search-max-width: 400px;
 	--search-bar-height: 40px;
-}
 
-.search-container {
-	width: clamp(var(--search-min-width), 20%, var(--search-max-width));
-}
-
-#navbar {
 	display: flex;
-	position: sticky;
-	padding: 10px 50px;
-	top: 0px;
 	justify-content: space-between;
 	align-items: center;
+	position: sticky;
+	top: 0;
+	padding: 10px 50px;
 	background-color: var(--nav-background);
-	box-shadow: 0px 0px 5px 0px black;
+	box-shadow: 0 0 5px 0 black;
 	z-index: 10000;
+}
+
+#navbar .search-container {
+	width: clamp(var(--search-min-width), 20%, var(--search-max-width));
 }
 
 #navbar input[type="search"]::-webkit-search-decoration,
 #navbar input[type="search"]::-webkit-search-cancel-button,
 #navbar input[type="search"]::-webkit-search-results-button,
 #navbar input[type="search"]::-webkit-search-results-decoration {
-	-webkit-appearance: none;
+	appearance: none;
 }
 
 #navbar .search-bar {
-	padding: 0px 20px;
 	width: clamp(var(--search-min-width), 100%, var(--search-max-width));
 	height: var(--search-bar-height);
-	background-color: var(--background-clr-900);
+	padding: 0 20px;
 	border: 1px solid var(--background-clr-400);
 	border-radius: 25em;
+	background-color: var(--background-clr-900);
 }
 
 #navbar .search-bar:focus {
@@ -53,25 +51,25 @@
 
 #navbar .links li {
 	position: relative;
-	padding: 2px;
 	cursor: pointer;
+	padding: 2px;
 	overflow: hidden;
 }
 
 #navbar .links li::after {
 	position: absolute;
-	content: "";
-	bottom: 0px;
-	left: 0px;
-	width: 0px;
+	bottom: 0;
+	left: 0;
+	width: 0;
 	height: 1px;
 	background-color: black;
+	content: "";
 	transition: width 1.25s;
 }
 
 #navbar a {
-	text-decoration: none;
 	color: black;
+	text-decoration: none;
 }
 
 #navbar .links li:hover::after {
@@ -80,16 +78,16 @@
 
 #navbar .search-results {
 	position: absolute;
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	font-weight: 500;
-	font-size: small;
+	top: calc(var(--search-bar-height) + 10px);
+	width: clamp(var(--search-min-width), 20%, var(--search-max-width));
+	padding: 5px;
 	border: 1px solid var(--background-clr-400);
 	border-radius: 10px;
-	padding: 5px;
-	list-style: none;
 	background-color: var(--background-clr-900);
-	width: clamp(var(--search-min-width), 20%, var(--search-max-width));
-	top: calc(var(--search-bar-height) + 10px);
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	font-size: small;
+	font-weight: 500;
+	list-style: none;
 }
 
 #navbar .search-results:empty {

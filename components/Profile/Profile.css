@@ -1,10 +1,10 @@
 body {
 	margin: 0;
-	font-family: "Franklin Gothic Medium";
+	font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 #profile-page {
-	--default-profile-color: hsl(0, 0%, 80%);
+	--default-profile-color: hsl(0deg 0% 80%);
 	--profile-picture-size: 150px;
 	--border-size: 25px;
 	--margin-indent: 10%;
@@ -12,33 +12,33 @@ body {
 
 #profile-page .profile-container {
 	position: relative;
-	background-color: var(--default-profile-color);
 	width: 100vw;
 	height: 170px;
 	margin-bottom: calc(var(--profile-picture-size) / 2 + var(--border-size));
+	background-color: var(--default-profile-color);
 }
 
 #profile-page .profile-information {
 	display: flex;
-	padding-top: 10px;
+	gap: 20px;
 	margin-left: calc(
 		var(--profile-picture-size) / 2 + var(--margin-indent) + var(--border-size)
 	);
-	gap: 20px;
+	padding-top: 10px;
 }
 
 #profile-page .large {
-	font-size: xx-large;
 	margin-right: calc(var(--margin-indent) / 3);
+	font-size: xx-large;
 }
 
 #profile-page .about {
-	padding: 10px;
 	width: calc(100vw - var(--margin-indent) * 2);
-	overflow-wrap: break-word;
 	margin-left: var(--margin-indent);
-	border-radius: 5px;
+	padding: 10px;
 	border: 1px solid black;
+	border-radius: 5px;
+	overflow-wrap: break-word;
 }
 
 #profile-page img {
@@ -54,21 +54,21 @@ body {
 	position: absolute;
 	top: 100%;
 	left: var(--margin-indent);
-	transform: translate(-50%, -50%);
+	width: var(--profile-picture-size);
+	height: var(--profile-picture-size);
 	border: var(--border-size) solid white;
 	border-radius: 50%;
 	background-color: var(--default-profile-color);
-	width: var(--profile-picture-size);
-	height: var(--profile-picture-size);
+	transform: translate(-50%, -50%);
 }
 
 #profile-page .profile-edit {
 	position: absolute;
 	cursor: pointer;
+	top: 0;
+	right: 0;
 	margin: 20px;
-	right: 0px;
-	top: 0px;
 	border-radius: 2px;
 	background-color: white;
-	box-shadow: 0px 0px 5px 0px hsl(0, 0%, 0%);
+	box-shadow: 0 0 5px 0 hsl(0deg 0% 0%);
 }
