@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { UserContext } from "./Profile";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToggle } from "../../hooks/useToggle";
@@ -14,9 +14,12 @@ export default function ProfileHero() {
 		backgroundImage,
 		followers = 0,
 		following = 0,
+		description
 	} = useContext(UserContext);
 
+	const [text, setText] = useState("");
 	const queryClient = useQueryClient();
+
 	let profilePictureURL = "";
 	let backgroundImageURL = "";
 	if(profilePicture){
@@ -75,7 +78,7 @@ export default function ProfileHero() {
 				<PencilSquare
 					className="profile-edit"
 					size={20}
-					onClick={Toggle}
+					onClick={()=>{Toggle(); setText(description || "");}}
 				></PencilSquare>
 			</div>
 			{state && (
@@ -87,8 +90,10 @@ export default function ProfileHero() {
 								name="description"
 								id="profile-description"
 								style={{ resize: "none" }}
-							></textarea>
+								onChange={(e)=>{setText(e.currentTarget.value)}}
+							>{description}</textarea>
 						</label>
+						<p>{text.length}/2000</p>
 						<div className="profile-actions">
 							<label htmlFor="profile-picture" className="profile-file">
 								Change Profile Picture

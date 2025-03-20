@@ -71,6 +71,7 @@ export async function getMessages(threadId: string | undefined): Promise<Message
             return Promise.resolve(returned)
         }
         catch(err){
+            console.log(err)
             return Promise.resolve([])
         }
 

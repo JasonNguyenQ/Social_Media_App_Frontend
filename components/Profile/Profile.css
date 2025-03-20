@@ -13,7 +13,7 @@ body {
 #profile-page .profile-container {
 	position: relative;
 	width: 100vw;
-	height: 170px;
+	height: 220px;
 	margin-bottom: calc(var(--profile-picture-size) / 2 + var(--border-size));
 	background-color: var(--default-profile-color);
 }
@@ -33,10 +33,11 @@ body {
 }
 
 #profile-page .about {
+	font-family: Arial, Helvetica, sans-serif;
 	width: calc(100vw - var(--margin-indent) * 2);
 	margin-left: var(--margin-indent);
 	padding: 10px;
-	border: 1px solid black;
+	border: 1px solid var(--neutral-clr-800);
 	border-radius: 5px;
 	overflow-wrap: break-word;
 }
@@ -89,7 +90,7 @@ body {
 
 #profile-page .profile-file:hover,
 #profile-page .profile-actions button:hover {
-	background-color: hsl(240, 90%, 40%);
+	background-color: hsl(240, 90%, 30%);
 }
 
 #profile-page #profile-description {
@@ -107,6 +108,14 @@ body {
 	display: flex;
 	justify-content: flex-end;
 	gap: 10px;
+}
+
+#profile-page .profile-actions button[type="reset"] {
+	background-color: var(--neutral-clr-400);
+}
+
+#profile-page .profile-actions button[type="reset"]:hover {
+	background-color: var(--neutral-clr-200);
 }
 
 #profile-page .profile-modal {

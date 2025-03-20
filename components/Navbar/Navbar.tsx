@@ -2,6 +2,8 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useDebounce } from "../../hooks/useDebounce";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import Search_Icon from "/search_icon.svg"
+import Person_Icon from "/person_icon.svg"
 
 type returnedUser = {
 	id: number;
@@ -50,6 +52,7 @@ export default function Navbar() {
 	return (
 		<nav id={"navbar"}>
 			<div className="search-container" ref={container}>
+				<img src={Search_Icon} className="search-icon"/>
 				<input
 					name="search"
 					className="search-bar"
@@ -59,17 +62,23 @@ export default function Navbar() {
 					onChange={FindUser}
 					onFocus={() => setFocused(true)}
 				></input>
-				<ul className="search-results">
-					{matchedUsers.length !== 0 &&
-						focused &&
-						matchedUsers.map((user, index) => {
-							return (
-								<li key={index}>
-									<Link to={`/search/${user.id}`}>{user.username}</Link>
-								</li>
-							);
-						})}
-				</ul>
+				<div className="search-results">
+					<span>Results</span>
+					<ul>
+						{matchedUsers.length !== 0 &&
+							focused &&
+							matchedUsers.map((user, index) => {
+								return (
+									<li key={index}>
+										<Link to={`/search/${user.id}`}>
+											<img src={Person_Icon}/>
+											{user.username}
+										</Link>
+									</li>
+								);
+							})}
+					</ul>
+				</div>
 			</div>
 
 			<ul className="links">
