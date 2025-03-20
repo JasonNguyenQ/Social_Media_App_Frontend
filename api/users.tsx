@@ -1,5 +1,5 @@
 import { ProfileProps } from "../constants/types"
-import { BASE_URL } from "../constants/globals"
+import { BASE_URL, ACCESS_KEY } from '../constants/globals' 
 
 export default async function fetchUser(id: number | undefined): Promise<ProfileProps>{
     const rej = {
@@ -7,8 +7,8 @@ export default async function fetchUser(id: number | undefined): Promise<Profile
         firstName: "",
         lastName: "",
         description: "",
-        profilePicture: "",
-        backgroundImage: ""
+        profilePicture: undefined,
+        backgroundImage: undefined
     }
     
     try{
@@ -27,4 +27,24 @@ export default async function fetchUser(id: number | undefined): Promise<Profile
     catch(err){
         return Promise.resolve(rej)
     }
-}   
+}
+
+export async function updateProfile(form : FormData): Promise<string>{
+    try{
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        await fetch(`${BASE_URL}/api/users`, {
+            method: 'PATCH',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+            body: form
+        })
+        return Promise.resolve("Finished")
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve("Incomplete")
+    }
+}

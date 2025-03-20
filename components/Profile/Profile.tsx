@@ -7,7 +7,7 @@ import { ProfileProps } from "../../constants/types";
 import { useQuery } from "@tanstack/react-query";
 import Authorize from "../../api/Auth";
 import { ACCESS_KEY } from "../../constants/globals";
-import fetchUser from "../../api/fetchUser";
+import fetchUser from "../../api/users";
 import Navbar from "../Navbar/Navbar";
 import { UserIdentifier } from "../../constants/types";
 
@@ -45,7 +45,7 @@ export default function Profile() {
 				<meta name="description" content="User Profile Page" />
 			</Helmet>
 			<Navbar />
-			<UserContext.Provider value={userInfo}>
+			<UserContext.Provider value={{...userInfo, id:id}}>
 				<ProfileHero />
 			</UserContext.Provider>
 			<p className="about">{userInfo.description}</p>
