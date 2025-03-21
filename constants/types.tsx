@@ -24,6 +24,7 @@ export type MessageInfo = {
 export type ThreadInfo = {
 	threadId: string;
 	threadName: string;
+	threadIcon: FileBlob;
 };
 
 export type UserIdentifier = {

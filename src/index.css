@@ -9,3 +9,8 @@
 	--neutral-clr-300: hsl(0deg, 0%, 30%);
 	--neutral-clr-200: hsl(0deg, 0%, 20%);
 }
+
+body{
+	margin: 0;
+	font-family: sans-serif;
+}

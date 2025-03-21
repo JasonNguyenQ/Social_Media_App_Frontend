@@ -12,6 +12,8 @@ import { getThreads, getMessages, addMessage } from "../../api/messages";
 import Authorize from "../../api/Auth";
 import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
+import { FileBlobToURL } from "../../utilities/URL";
+import Person_Icon from "/person_icon.svg"
 
 export default function Messages() {
 	const token = sessionStorage.getItem(ACCESS_KEY);
@@ -173,6 +175,7 @@ export default function Messages() {
 									ThreadHandler(thread);
 								}}
 							>
+								<img src={FileBlobToURL(thread.threadIcon, Person_Icon)}/>
 								{thread.threadName}
 							</div>
 						);

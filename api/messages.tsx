@@ -15,6 +15,7 @@ export async function getThreads(): Promise<ThreadInfo[]>{
         return Promise.resolve(threads)
     }
     catch(err){
+        console.log(err)
         return Promise.resolve([])
     }
 }
@@ -45,34 +46,34 @@ export async function addMessage(variables : { threadId: string, message: string
 }
 
 export async function getMessages(threadId: string | undefined): Promise<MessageInfo[]>{
-        try{
-            const token = sessionStorage.getItem(ACCESS_KEY)
-            const response = await fetch(`${BASE_URL}/api/messages/${threadId}`, {
-                method: 'GET',
-                credentials: "include",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-
-            type message = {
-                username: string,
-                message: string
-                createdAt: Date,
+    try{
+        const token = sessionStorage.getItem(ACCESS_KEY)
+        const response = await fetch(`${BASE_URL}/api/messages/${threadId}`, {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`
             }
-    
-            const messages: message[] = await response.json()
-            const returned = messages.map((message)=>({
-                from: message.username, 
-                message: message.message, 
-                timeStamp: Date.parse(message.createdAt.toString())
-            }))
+        })
 
-            return Promise.resolve(returned)
+        type message = {
+            username: string,
+            message: string
+            createdAt: Date,
         }
-        catch(err){
-            console.log(err)
-            return Promise.resolve([])
-        }
+
+        const messages: message[] = await response.json()
+        const returned = messages.map((message)=>({
+            from: message.username, 
+            message: message.message, 
+            timeStamp: Date.parse(message.createdAt.toString())
+        }))
+
+        return Promise.resolve(returned)
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve([])
+    }
 
 }

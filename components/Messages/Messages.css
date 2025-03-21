@@ -8,9 +8,8 @@
 }
 
 #messages-page .container {
-	display: grid;
+	display: flex;
 	width: 90%;
-	grid-template-columns: 1fr 2fr;
 }
 
 #messages-page .message-container {
@@ -22,6 +21,7 @@
 	height: var(--container-height);
 	padding: var(--message-container-padding);
 	overflow: hidden;
+	flex: 1;
 }
 
 #messages-page .message-container::before {
@@ -29,13 +29,14 @@
 	left: 0;
 	width: 1px;
 	height: var(--container-height);
-	background-color: black;
+	box-shadow: 0px 0px 2px 0px black;
 	content: "";
 }
 
 #messages-page .message-container > button {
 	align-self: center;
 	position: absolute;
+	cursor: pointer;
 	bottom: calc((3 * var(--message-container-padding)));
 	padding: 5px 10px;
 	border: none;
@@ -122,21 +123,44 @@
 
 #messages-page .threads-container {
 	height: var(--container-height);
+	min-width: 25%;
+	max-width: 75%;
+	resize: horizontal;
 	overflow-y: auto;
 }
 
 #messages-page .thread {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	cursor: pointer;
-	height: 20px;
 	margin: 10px;
 	padding: 10px;
 	border-radius: 10px;
+	color: var(--neutral-clr-400);
+	font-size: .85rem;
+	font-weight: 600;
+}
+
+#messages-page .thread>img{
+	--img-size: 30px;
+	width: var(--img-size);
+	height: var(--img-size);
+	border-radius: 50%;
+	background-color: var(--neutral-clr-800);
+	object-fit: cover;
+	filter: grayscale(1);
 }
 
 #messages-page .active-thread {
 	background-color: hsl(0deg 0% 90%);
+	color: black;
+}
+
+#messages-page .active-thread > img {
+	filter: none;
 }
 
 #messages-page .thread:hover {
-	background-color: hsl(0deg 0% 80%);
+	background-color: hsl(0deg 0% 87%);
 }

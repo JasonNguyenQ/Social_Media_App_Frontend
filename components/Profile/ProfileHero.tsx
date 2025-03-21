@@ -1,9 +1,9 @@
 import { FormEvent, useContext, useRef, useState } from "react";
 import { UserContext } from "./Profile";
 import { useQueryClient } from "@tanstack/react-query";
-import { useToggle } from "../../hooks/useToggle";
 import { PencilSquare } from "react-bootstrap-icons";
 import { updateProfile } from "../../api/users";
+import { FileBlobToURL } from "../../utilities/URL"
 
 export default function ProfileHero() {
 	const {
@@ -20,23 +20,10 @@ export default function ProfileHero() {
 	const [text, setText] = useState("");
 	const queryClient = useQueryClient();
 
-	let profilePictureURL = "";
-	let backgroundImageURL = "";
-	if(profilePicture){
-		profilePictureURL += "data:image/png;base64,"
-		for(const code of profilePicture.data){
-			profilePictureURL += String.fromCharCode(code)
-		}
-	}
-	if(backgroundImage){
-		backgroundImageURL += "data:image/png;base64,"
-		for(const code of backgroundImage.data){
-			backgroundImageURL += String.fromCharCode(code)
-		}
-	}
-	
+	let profilePictureURL = FileBlobToURL(profilePicture);
+	let backgroundImageURL = FileBlobToURL(backgroundImage);
 
-	const [state, Toggle] = useToggle(false);
+	const [toggleState, setToggleState] = useState(false);
 	const editor = useRef<HTMLDialogElement>(null);
 
 	async function ApplyChanges(e: FormEvent<HTMLFormElement>) {
@@ -60,7 +47,7 @@ export default function ProfileHero() {
 		}
 		await updateProfile(data);
 		queryClient.invalidateQueries({ queryKey: ["userInfo", { id }] })
-		Toggle();
+		setToggleState(false);
 	}
 
 	return (
@@ -78,10 +65,10 @@ export default function ProfileHero() {
 				<PencilSquare
 					className="profile-edit"
 					size={20}
-					onClick={()=>{Toggle(); setText(description || "");}}
+					onClick={()=>{setToggleState(true); setText(description || "");}}
 				></PencilSquare>
 			</div>
-			{state && (
+			{toggleState && (
 				<dialog ref={editor} className="profile-modal">
 					<form onSubmit={ApplyChanges}>
 						<label htmlFor="profile-description">
@@ -115,7 +102,7 @@ export default function ProfileHero() {
 									style={{ display: "none" }}
 								/>
 							</label>
-							<button type="reset" onClick={Toggle}>
+							<button type="reset" onClick={()=>{setToggleState(false)}}>
 								Discard Changes
 							</button>
 							<button type="submit">Apply Changes</button>

@@ -15,17 +15,17 @@
 	padding: 10px 50px;
 	background-color: var(--nav-background);
 	box-shadow: 0 0 2px 0 var(--neutral-clr-800);
-	z-index: 10000;
 	font-family: sans-serif;
 	font-size: .9rem;
+	z-index: 10000;
 }
 
 #navbar .search-container {
-	position: relative;
 	display: flex;
+	gap: 5px;
+	position: relative;
 	width: max-content;
 	padding: 0px 10px;
-	gap: 5px;
 	border: 1px solid var(--neutral-clr-700);
 	border-radius: 10px;
 	background-color: white;
@@ -46,10 +46,10 @@
 
 #navbar .search-bar {
 	position: relative;
-	border: none;
-	background-color: transparent;
 	width: clamp(var(--search-min-width), 100%, var(--search-max-width));
 	height: var(--search-bar-height);
+	border: none;
+	background-color: transparent;
 }
 
 #navbar .search-bar:focus {
@@ -67,10 +67,10 @@
 }
 
 #navbar .links li {
-	color: var(--neutral-clr-400);
 	position: relative;
 	cursor: pointer;
 	padding: 2px;
+	color: var(--neutral-clr-400);
 	overflow: hidden;
 	transition: all .5s;
 }
@@ -80,7 +80,8 @@
 	bottom: 0;
 	left: 0;
 	width: 0;
-	height: 1px;
+	height: 2px;
+	border-radius: 10px;
 	background-color: black;
 	content: "";
 	transition: width .5s;
@@ -88,6 +89,7 @@
 
 #navbar a {
 	color: inherit;
+	font-weight: 600;
 	text-decoration: none;
 }
 
@@ -96,8 +98,8 @@
 }
 
 #navbar .links li:hover::after {
-	color: black;
 	width: 100%;
+	color: black;
 }
 
 #navbar .search-results {
@@ -132,12 +134,12 @@
 
 #navbar .search-results a {
 	display: flex;
-	font-size: .9rem;
-	font-weight: 500;
 	align-items: center;
-	padding: 3px;
 	gap: 5px;
+	padding: 3px;
 	border-radius: 5px;
+	font-size: .85rem;
+	font-weight: 500;
 }
 
 #navbar .search-results a:hover {
