@@ -14,6 +14,7 @@ import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
+import Send_Icon from "/send_icon.svg"
 
 export default function Messages() {
 	const token = sessionStorage.getItem(ACCESS_KEY);
@@ -175,7 +176,7 @@ export default function Messages() {
 									ThreadHandler(thread);
 								}}
 							>
-								<img src={FileBlobToURL(thread.threadIcon, Person_Icon)}/>
+								<img src={FileBlobToURL(thread.threadIcon, Person_Icon)} alt="thread icon"/>
 								{thread.threadName}
 							</div>
 						);
@@ -199,7 +200,7 @@ export default function Messages() {
 							placeholder="Send Message..."
 							maxLength={2000}
 						></input>
-						<button onClick={SendMessage}>Send</button>
+						<button onClick={SendMessage}><img src={Send_Icon} alt="Send"/></button>
 					</div>
 					<button hidden={!viewOlder} onClick={scrollToLastMessage}>
 						View Recent...

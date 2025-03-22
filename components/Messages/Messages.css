@@ -109,12 +109,21 @@
 }
 
 #messages-page .message-field > button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2px;
 	cursor: pointer;
 	height: var(--message-input-height);
 	border: none;
 	border-radius: 0 10px 10px 0;
-	background-color: hsl(0deg 0% 70%);
+	background-color: hsl(0deg, 0%, 75%);
 	flex-grow: 0.05;
+}
+
+#messages-page .message-field img {
+	width: 20px;
+	height: 20px;
 }
 
 #messages-page .message-field > button:hover {
@@ -134,12 +143,13 @@
 	align-items: center;
 	gap: 10px;
 	cursor: pointer;
-	margin: 10px;
-	padding: 10px;
+	margin: 5px;
+	padding: 5px 10px;
 	border-radius: 10px;
 	color: var(--neutral-clr-400);
 	font-size: .85rem;
 	font-weight: 600;
+	overflow: hidden;
 }
 
 #messages-page .thread>img{

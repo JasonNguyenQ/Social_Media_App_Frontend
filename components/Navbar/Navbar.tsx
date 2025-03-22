@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { useDebounce } from "../../hooks/useDebounce";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Search_Icon from "/search_icon.svg"
+import Explore_Icon from "/explore_icon.svg"
 import Person_Icon from "/person_icon.svg"
+import Message_Icon from "/message_icon.svg"
+import Settings_Icon from "/settings_icon.svg"
 
 type returnedUser = {
 	id: number;
@@ -71,7 +74,7 @@ export default function Navbar() {
 								return (
 									<li key={index}>
 										<Link to={`/search/${user.id}`}>
-											<img src={Person_Icon}/>
+											<img src={Person_Icon} alt="user icon"/>
 											{user.username}
 										</Link>
 									</li>
@@ -83,16 +86,16 @@ export default function Navbar() {
 
 			<ul className="links">
 				<li>
-					<Link to="/explore">Explore</Link>
+					<Link to="/explore"><img src={Explore_Icon} alt="explore icon"/><span>Explore</span></Link>
 				</li>
 				<li>
-					<Link to="/profile">Profile</Link>
+					<Link to="/profile"><img src={Person_Icon} alt="profile icon"/><span>Profile</span></Link>
 				</li>
 				<li>
-					<Link to="/messages">Messages</Link>
+					<Link to="/messages"><img src={Message_Icon} alt="message icon"/><span>Messages</span></Link>
 				</li>
 				<li>
-					<Link to="/settings">Settings</Link>
+					<Link to="/settings"><img src={Settings_Icon} alt="settings icon"/><span>Settings</span></Link>
 				</li>
 			</ul>
 		</nav>
