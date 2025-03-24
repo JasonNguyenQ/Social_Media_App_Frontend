@@ -1,7 +1,11 @@
+#login-page, #signup-page{
+	--left-margin: 2%;
+}
+
 #login-page .form,
 #signup-page .form {
 	position: absolute;
-	top: 50%;
+	top: 15%;
 	left: 50%;
 	width: 30%;
 	padding: 20px;
@@ -9,7 +13,7 @@
 	background-color: hsl(0deg 0% 90%);
 	box-shadow: 0 0 5px 0 hsl(0deg 0% 50%);
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%,0%);
 }
 
 #login-page .form > h2,
@@ -38,13 +42,35 @@
 #login-page .input-field > label,
 #signup-page .input-field > label {
 	display: block;
-	margin-bottom: 5px;
-	margin-left: 2%;
+	margin-left: var(--left-margin);
+}
+
+#login-page .issue-container,
+#signup-page .issue-container{
+	--vertical-margin: 5px;
+	color: red;
+	font-size: small;
+	font-weight: 500;
+	margin-top: var(--vertical-margin);
+	margin-bottom: var(--vertical-margin);
+}
+
+#login-page .issue-container:empty,
+#signup-page .issue-container:empty{
+	display: none;
+}
+
+#login-page .issue,
+#signup-page .issue {
+	margin: 0;
+	text-wrap-style: balance;
 }
 
 #login-page .input-field > input,
 #signup-page .input-field > input {
 	width: 100%;
+	margin-top: 5px;
+	margin-bottom: 10px;
 	padding: 10px 20px;
 	border: none;
 	border-radius: 50px;
