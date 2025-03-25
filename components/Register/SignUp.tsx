@@ -49,12 +49,11 @@ export default function SignUp() {
 		const dataEntries = {
 			username: formData.get("username"),
 			password: formData.get("password"),
-			confirmation: formData.get("confirmation"),
 			firstName: formData.get("firstName"),
 			lastName: formData.get("lastName")
 		}
 
-		const result = userInputSchema.safeParse(dataEntries);
+		const result = userInputSchema.safeParse({...dataEntries, confirmation: formData.get("confirmation")});
 		if(result.success){
 			await fetch("http://localhost:3000/api/users/register", {
 				method: "POST",
