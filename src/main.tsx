@@ -10,15 +10,6 @@ import SignUp from "../components/Register/SignUp.tsx";
 import Login from "../components/Register/Login.tsx";
 import ProfileRouter from "../components/Profile/ProfileRouter.tsx"
 
-window.addEventListener("load", () => {
-	if (
-		typeof navigator.serviceWorker !== "undefined" &&
-		!location.href.includes("/search/")
-	) {
-		navigator.serviceWorker.register("sw.js");
-	}
-});
-
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
