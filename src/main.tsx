@@ -8,8 +8,7 @@ import Messages from "../components/Messages/Messages.tsx";
 import Explore from "../components/Explore/Explore.tsx";
 import SignUp from "../components/Register/SignUp.tsx";
 import Login from "../components/Register/Login.tsx";
-import Profile from "../components/Profile/Profile.tsx";
-import Search from "../components/Search/Search.tsx";
+import ProfileRouter from "../components/Profile/ProfileRouter.tsx"
 
 window.addEventListener("load", () => {
 	if (
@@ -29,12 +28,12 @@ createRoot(document.getElementById("root")!).render(
 				<Routes>
 					<Route path="*" element={<Login />} />
 					<Route path="/register" element={<SignUp />} />
-					<Route path="/search/:userid" element={<Search />} />
+					<Route path="/search/:userid" element={<ProfileRouter />} />
 
 					<Route element={<ProtectedRoutes />}>
 						<Route path="/messages" element={<Messages />} />
 						<Route path="/explore" element={<Explore />} />
-						<Route path="/profile" element={<Profile />} />
+						<Route path="/profile" element={<ProfileRouter/>} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

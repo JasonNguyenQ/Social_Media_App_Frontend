@@ -1,53 +1,122 @@
-import { Helmet } from "react-helmet-async";
-import { createContext } from "react";
-import "./Profile.css";
-import ProfileHero from "./ProfileHero";
-import { APP_NAME } from "../../constants/globals";
+import { FormEvent, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { PencilSquare } from "react-bootstrap-icons";
+import { updateProfile } from "../../api/users";
+import { FileBlobToURL } from "../../utilities/URL"
 import { ProfileProps } from "../../constants/types";
-import { useQuery } from "@tanstack/react-query";
-import Authorize from "../../api/Auth";
-import { ACCESS_KEY } from "../../constants/globals";
-import fetchUser from "../../api/users";
-import Navbar from "../Navbar/Navbar";
-import { UserIdentifier } from "../../constants/types";
+import StatusBar from "./StatusBar.tsx"
 
-export const UserContext = createContext<ProfileProps>({
-	username: "",
-	firstName: "",
-	lastName: "",
-});
+export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, isSelf : boolean}) {
+	const {
+		id,
+		firstName,
+		lastName,
+		profilePicture,
+		backgroundImage,
+		followers = 0,
+		following = 0,
+		description
+	} = userInfo;
 
-export default function Profile() {
-	const token = sessionStorage.getItem(ACCESS_KEY);
+	const [text, setText] = useState("");
+	const queryClient = useQueryClient();
 
-	const { data: userIdentifier } = useQuery<UserIdentifier>({
-		queryKey: ["auth", { token }],
-		queryFn: async () => await Authorize(token),
-	});
+	let profilePictureURL = FileBlobToURL(profilePicture);
+	let backgroundImageURL = FileBlobToURL(backgroundImage);
 
-	const id = userIdentifier?.id || -1;
+	const [toggleState, setToggleState] = useState(false);
+	const editor = useRef<HTMLDialogElement>(null);
 
-	const { data: userInfo } = useQuery<ProfileProps>({
-		queryKey: ["userInfo", { id }],
-		queryFn: async () => await fetchUser(id),
-		initialData: {
-			username: "",
-			firstName: "",
-			lastName: "",
-			description: "no description",
-		},
-	});
+	async function ApplyChanges(e: FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+		const formData = new FormData(e.currentTarget);
+		const desc = formData.get("description") as string;
+		const pfp = formData.get("profile-picture") as File;
+		const profileBackground = formData.get("profile-background") as File;
+		const data = new FormData();
+
+		if (desc) {
+			data.append("description", desc)
+		}
+
+		if (pfp.type.startsWith("image")) {
+			data.append("profilePicture", pfp);
+		}
+
+		if (profileBackground.type.startsWith("image")) {
+			data.append("backgroundImage", profileBackground);
+		}
+		await updateProfile(data);
+		queryClient.invalidateQueries({ queryKey: ["userInfo", { id }] })
+		setToggleState(false);
+	}
 
 	return (
-		<div id={"profile-page"}>
-			<Helmet>
-				<title>Profile | {APP_NAME}</title>
-				<meta name="description" content="User Profile Page" />
-			</Helmet>
-			<Navbar />
-			<UserContext.Provider value={{...userInfo, id:id}}>
-				<ProfileHero />
-			</UserContext.Provider>
+		<div id="profile-page">
+			<div className="profile-container">
+				<img src={backgroundImageURL} alt="" className="bg-image" />
+				<img src={profilePictureURL} alt="" className="pfp" />
+				<div className="profile-information">
+					<span className="large name">
+						{firstName} {lastName}
+					</span>
+					<span className="followers">Followers: {followers}</span>
+					<span className="following">Following: {following}</span>
+					{!isSelf && <StatusBar/>}
+				</div>
+				{isSelf && 
+				<PencilSquare
+					className="profile-edit"
+					size={20}
+					onClick={()=>{
+						setToggleState(true); 
+						setText(description || "");
+					}}
+				></PencilSquare>
+				}
+			</div>
+			{toggleState && isSelf && (
+				<dialog ref={editor} className="profile-modal">
+					<form onSubmit={ApplyChanges}>
+						<label htmlFor="profile-description">
+							Description
+							<textarea
+								name="description"
+								id="profile-description"
+								style={{ resize: "none" }}
+								onChange={(e)=>{setText(e.currentTarget.value)}}
+							>{description}</textarea>
+						</label>
+						<p>{text.length}/2000</p>
+						<div className="profile-actions">
+							<label htmlFor="profile-picture" className="profile-file">
+								Change Profile Picture
+								<input
+									name="profile-picture"
+									type="file"
+									id="profile-picture"
+									accept="image/png, image/jpg, image/jpeg"
+									style={{ display: "none" }}
+								/>
+							</label>
+							<label htmlFor="profile-background" className="profile-file">
+								Change Background Image
+								<input
+									name="profile-background"
+									type="file"
+									id="profile-background"
+									accept="image/png, image/jpg, image/jpeg"
+									style={{ display: "none" }}
+								/>
+							</label>
+							<button type="reset" onClick={()=>{setToggleState(false)}}>
+								Discard Changes
+							</button>
+							<button type="submit">Apply Changes</button>
+						</div>
+					</form>
+				</dialog>
+			)}
 			<p className="about">{userInfo.description}</p>
 		</div>
 	);
