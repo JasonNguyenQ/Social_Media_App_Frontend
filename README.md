@@ -9,7 +9,7 @@ A social media app that allows for instantaneous transmission of messages betwee
 
 [Contact](#contact)
 ## Demo Video
-[![Video Title](https://i9.ytimg.com/vi_webp/jXCQX3M2-uY/mq2.webp?sqp=CICCl78G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYACsAWKAgwIABABGGUgZShlMA8=&rs=AOn4CLAONE6Sgie9dNK2c_4dpkJCsgIlFw)](https://youtu.be/jXCQX3M2-uY)
+[![Social Media App Demo](https://github.com/JasonNguyenQ/Social_Media_App_Frontend/blob/master/mq2.webp?raw=true)](https://youtu.be/jXCQX3M2-uY)
 
 ## Installation
 N/A
