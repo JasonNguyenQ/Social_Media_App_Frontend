@@ -107,6 +107,10 @@
 	font-size: 0.9rem;
 }
 
+#profile-page .friend-status:hover{
+	background-color: hsl(240, 90%, 30%);
+}
+
 #profile-page #profile-description {
 	display: block;
 	width: 100%;

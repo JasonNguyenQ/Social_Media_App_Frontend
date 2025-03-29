@@ -93,7 +93,7 @@ export default function Messages() {
 			return (
 				<div key={index} className="message self-message">
 					<p className="message-header">
-						{message.from} | {date}
+						You | {date}
 					</p>
 					<p className="message-content">{message.message}</p>
 				</div>

@@ -48,11 +48,11 @@
 #login-page .issue-container,
 #signup-page .issue-container{
 	--vertical-margin: 5px;
+	margin-top: var(--vertical-margin);
+	margin-bottom: var(--vertical-margin);
 	color: red;
 	font-size: small;
 	font-weight: 500;
-	margin-top: var(--vertical-margin);
-	margin-bottom: var(--vertical-margin);
 }
 
 #login-page .issue-container:empty,
