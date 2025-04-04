@@ -32,8 +32,11 @@ Follow the steps listed below to run the front and backend
 1. Create two terminals to run your front and backend with <br/>``` Ctrl+Shift+` ``` or ``` Ctrl+Shift+5 ``` for split terminal if you already had an open terminal.
 2. Change your directory to the frontend in your first terminal <br/>  ```cd .\Social_Media_App_Frontend\```
 3. Run the frontend <br/>```npm run dev```
-4. Now change your directory to the backend in your second terminal <br/> ```cd .\Social_Media_App_Backend\```
-5. Run the backend <br/>```npm run dev```
+
+The following commands refer to the usage instructions in the [Social Media App Backend](https://github.com/JasonNguyenQ/Social_Media_App_Backend)
+1. Run your redis server using linux terminal <br/> ```redis-server```
+2. Now change your directory to the backend in your second terminal <br/> ```cd .\Social_Media_App_Backend\```
+3. Run the backend <br/>```npm run dev```
 
 ## Contact
 Feel free to contact me @ [jason_nguyen14@yahoo.com](mailto:jason_nguyen14@yahoo.com) if you have any questions and/or concerns.
