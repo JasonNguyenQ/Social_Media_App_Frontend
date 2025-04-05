@@ -25,7 +25,8 @@ To set up the project, please follow the instructions below
 2. Change your directory to the folder that has been cloned <br/> ```cd .\Social_Media_App_Frontend\```
 3. Install node dependencies and packages <br/> ```npm i``` or ```npm install```
 4. Set up the backend server by following the README.md in the [Social Media App Backend](https://github.com/JasonNguyenQ/Social_Media_App_Backend)
-
+5. If you changed the domain and/or port of your backend server, change the BASE_URL constant in the [globals.tsx file](https://github.com/JasonNguyenQ/Social_Media_App_Frontend/blob/master/constants/globals.tsx) to reflect those changes
+ 
 ## Usage
 
 Follow the steps listed below to run the front and backend
