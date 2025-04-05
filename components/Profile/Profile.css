@@ -61,6 +61,7 @@
 }
 
 #profile-page .profile-edit {
+	--img-size: 25px;
 	position: absolute;
 	cursor: pointer;
 	top: 0;
@@ -69,6 +70,8 @@
 	border-radius: 2px;
 	background-color: white;
 	box-shadow: 0 0 5px 0 hsl(0deg 0% 0%);
+	width: var(--img-size);
+	height: var(--img-size);
 }
 
 #profile-page .profile-edit:hover {

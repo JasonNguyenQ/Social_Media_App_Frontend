@@ -55,7 +55,7 @@ export default function Navbar() {
 	return (
 		<nav id={"navbar"}>
 			<div className="search-container" ref={container}>
-				<img src={Search_Icon} className="search-icon"/>
+				<img src={Search_Icon} alt="search icon" className="search-icon"/>
 				<input
 					name="search"
 					className="search-bar"

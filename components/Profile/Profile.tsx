@@ -1,9 +1,9 @@
 import { FormEvent, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { PencilSquare } from "react-bootstrap-icons";
 import { updateProfile } from "../../api/users";
 import { FileBlobToURL } from "../../utilities/URL"
 import { ProfileProps } from "../../constants/types";
+import Edit_Icon from "/edit_icon.svg"
 import StatusBar from "./StatusBar.tsx"
 
 export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, isSelf : boolean}) {
@@ -21,8 +21,8 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 	const [text, setText] = useState("");
 	const queryClient = useQueryClient();
 
-	let profilePictureURL = FileBlobToURL(profilePicture);
-	let backgroundImageURL = FileBlobToURL(backgroundImage);
+	const profilePictureURL = FileBlobToURL(profilePicture);
+	const backgroundImageURL = FileBlobToURL(backgroundImage);
 
 	const [toggleState, setToggleState] = useState(false);
 	const editor = useRef<HTMLDialogElement>(null);
@@ -50,12 +50,12 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 		queryClient.invalidateQueries({ queryKey: ["userInfo", { id }] })
 		setToggleState(false);
 	}
-
+	
 	return (
 		<div id="profile-page">
 			<div className="profile-container">
-				<img src={backgroundImageURL} alt="" className="bg-image" />
-				<img src={profilePictureURL} alt="" className="pfp" />
+				<img src={backgroundImageURL} alt="" className="bg-image"/>
+				<img src={profilePictureURL} alt="" className="pfp"/>
 				<div className="profile-information">
 					<span className="large name">
 						{firstName} {lastName}
@@ -65,14 +65,15 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 					{!isSelf && <StatusBar/>}
 				</div>
 				{isSelf && 
-				<PencilSquare
+				<img
+					src={Edit_Icon}
+					alt="edit icon"
 					className="profile-edit"
-					size={20}
 					onClick={()=>{
 						setToggleState(true); 
 						setText(description || "");
 					}}
-				></PencilSquare>
+				/>
 				}
 			</div>
 			{toggleState && isSelf && (
@@ -85,7 +86,8 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 								id="profile-description"
 								style={{ resize: "none" }}
 								onChange={(e)=>{setText(e.currentTarget.value)}}
-							>{description}</textarea>
+								defaultValue={description}
+							></textarea>
 						</label>
 						<p>{text.length}/2000</p>
 						<div className="profile-actions">

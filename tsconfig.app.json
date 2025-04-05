@@ -25,7 +25,6 @@
 	"include": [
 		"src",
 		"components/Profile/PersonalProfile.tsx",
-		"sw.js",
 		"components/Profile/StatusBar.tsx",
 		"components/Messages/Messages.tsx",
 		"components/Register/SignUp.tsx",
