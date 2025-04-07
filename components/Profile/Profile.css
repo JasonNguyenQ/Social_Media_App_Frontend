@@ -24,9 +24,16 @@
 	font-weight: 600;
 }
 
+#profile-page .followers,
+#profile-page .following {
+	min-width: fit-content;
+	font-size: 1rem;
+}
+
 #profile-page .large {
+	min-width: fit-content;
 	margin-right: calc(var(--margin-indent) / 3);
-	font-size: xx-large;
+	font-size: 2rem;
 }
 
 #profile-page .about {
