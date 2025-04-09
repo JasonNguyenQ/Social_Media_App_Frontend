@@ -26,14 +26,14 @@
 
 #profile-page .followers,
 #profile-page .following {
-	min-width: fit-content;
 	font-size: 1rem;
+	min-width: fit-content;
 }
 
 #profile-page .large {
-	min-width: fit-content;
 	margin-right: calc(var(--margin-indent) / 3);
 	font-size: 2rem;
+	min-width: fit-content;
 }
 
 #profile-page .about {
@@ -73,12 +73,12 @@
 	cursor: pointer;
 	top: 0;
 	right: 0;
+	width: var(--img-size);
+	height: var(--img-size);
 	margin: 20px;
 	border-radius: 2px;
 	background-color: white;
 	box-shadow: 0 0 5px 0 hsl(0deg 0% 0%);
-	width: var(--img-size);
-	height: var(--img-size);
 }
 
 #profile-page .profile-edit:hover {

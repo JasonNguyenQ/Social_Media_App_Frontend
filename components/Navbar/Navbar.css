@@ -22,9 +22,9 @@
 
 #navbar .search-container {
 	display: flex;
+	align-items: center;
 	gap: 5px;
 	position: relative;
-	align-items: center;
 	width: max-content;
 	padding: 0px 10px;
 	border: 1px solid var(--neutral-clr-700);
