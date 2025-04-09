@@ -31,3 +31,11 @@ export type UserIdentifier = {
 	id: number;
 	username: string;
 };
+
+export type PostProps = {
+	profilePicture?: FileBlob;
+	from: string;
+	title: string;
+	image?: FileBlob;
+	caption: string;
+}

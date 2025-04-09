@@ -4,10 +4,10 @@
 
 #explore-page .explore-container{
     display: grid;
-    gap: 20px;
+    gap: 150px;
     margin: 0px 20px;
     padding: 20px 0px;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
 }
 
 #explore-page .explore-container>*{
@@ -32,7 +32,6 @@
     position: relative;
     cursor: pointer;
     border-radius: 10px;
-    flex: 1;
     list-style-type: none;
 }
 
@@ -63,4 +62,10 @@
     position: absolute;
     top: 0px;
     left: 105%;
+}
+
+#explore-page .content-container{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
 }

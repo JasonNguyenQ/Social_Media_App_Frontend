@@ -1,0 +1,101 @@
+.post{
+    --background: var(--neutral-clr-850);
+    --gap: 5px;
+    --border-radius: 5px;
+
+    width: 100%;
+    padding: 20px;
+    background-color: var(--neutral-clr-950);
+    border-radius: 10px;
+}
+
+.post > *{
+    margin: var(--gap) 0px;
+}
+
+.post header{
+    display: flex;
+    gap: var(--gap);
+    margin-bottom: 10px;
+}
+
+.post .profile-picture{
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+
+    background-color: var(--background);
+}
+
+.post .metadata{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2px 10px;
+    background-color: var(--background);
+    border-radius: var(--border-radius);
+}
+
+.post .metadata h2{
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+}
+
+.post .metadata span{
+    margin: 0;
+    font-size: .75rem;
+}
+
+.post .image:not([src]){
+    display: none;
+}
+
+.post .image{
+    margin: 0;
+    background-color: var(--background);
+    width: 100%;
+    min-height: 300px;
+    max-height: 900px;
+    border-radius: var(--border-radius);
+}
+
+.post .caption {
+    background-color: var(--background);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    font-size: .8rem;
+}
+
+.post .input-container{
+    display: flex;
+    gap: var(--gap)
+}
+
+.post .input-container input{
+    background-color: var(--background);
+    border: none;
+    flex: 10;
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+}
+
+.post .input-container input:focus{
+    outline: none;
+}
+
+.post .input-container button{
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    border-radius: var(--border-radius);
+    background-color: var(--neutral-clr-700);
+    border: none;
+}
+
+.post .input-container button:hover{
+    background-color: var(--neutral-clr-600);
+}

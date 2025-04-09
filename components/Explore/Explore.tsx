@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import { APP_NAME } from '../../constants/globals'
 import Right_Arrow_Icon from "/right_arrow_icon.svg"
 import New_Tab_Icon from "/new_tab_icon.svg"
+import Post from './Post.tsx'
 import "./Explore.css"
 
 export default function Explore(){
@@ -43,7 +44,22 @@ export default function Explore(){
                         </Link>
                     </li>
                 </ul>
-                <div className="content-container">Placeholder</div>
+                <div className="content-container">
+                <Post PostInfo={{
+                    title: "First Post of the Website", 
+                    from: "Owner", 
+                    caption: "Hello, this is the first post of the website."}}/>
+
+                <Post PostInfo={{
+                    title: "Testing 1 2 3", 
+                    from: "Tester", 
+                    caption: "This is a test."}}/>
+                
+                <Post PostInfo={{
+                title: "...", 
+                from: "...", 
+                caption: "..."}}/>
+                </div>
                 <div>Placeholder</div>
             </div>
         </div>
