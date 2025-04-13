@@ -6,9 +6,11 @@ import Right_Arrow_Icon from "/right_arrow_icon.svg"
 import New_Tab_Icon from "/new_tab_icon.svg"
 import Post from './Post.tsx'
 import "./Explore.css"
+import { useState } from 'react';
 
 export default function Explore(){
-
+    const [toggleState, setToggleState] = useState(false);
+    
     return (
         <div id="explore-page">
             <Helmet>
@@ -61,7 +63,23 @@ export default function Explore(){
                 caption: "..."}}/>
                 </div>
                 <div>Placeholder</div>
+                <button className="create" onClick={()=>{setToggleState(true)}}>
+                    <span>+</span>
+                    <span>Create Post</span>
+                </button>
             </div>
+            {toggleState && (
+                <form className="post-form">
+                    <label htmlFor="post-title">Title</label>
+                    <input id="post-title" type="text" placeholder='Enter a title'/>
+                    <label htmlFor="post-caption">Caption</label>
+                    <input id="post-caption" type="text" placeholder='Enter a caption'/>
+                    <label htmlFor="post-image">Image (optional)</label>
+                    <input id="post-image" type="file"/>
+                    <button type="reset" onClick={()=>{setToggleState(false)}}>Discard</button>
+                    <button type="submit">Post</button>
+                </form>
+            )}
         </div>
     )
 }

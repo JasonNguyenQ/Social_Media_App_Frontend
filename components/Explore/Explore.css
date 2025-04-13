@@ -69,3 +69,41 @@
     flex-direction: column;
     gap: 50px;
 }
+
+#explore-page .create{
+    --size: 5ch;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    gap: 2ch;
+    align-items: center;
+    bottom: 40px;
+    left: 72%;
+    width: var(--size);
+    height: var(--size);
+    padding-left: 2ch;
+    border-radius: calc(var(--size)/2);
+    text-wrap-mode: nowrap;
+    overflow: hidden;
+    transition: .5s all;
+    color: white;
+    background-color: hsl(240,60%,50%);
+    border: none;
+}
+
+#explore-page .create:hover{
+    width: calc(18ch);
+}
+
+#explore-page .post-form{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: 1px solid var(--neutral-clr-500);
+    background-color: var(--neutral-clr-900);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}

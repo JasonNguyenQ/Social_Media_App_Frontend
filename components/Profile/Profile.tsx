@@ -25,7 +25,6 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 	const backgroundImageURL = FileBlobToURL(backgroundImage);
 
 	const [toggleState, setToggleState] = useState(false);
-	const editor = useRef<HTMLDialogElement>(null);
 
 	async function ApplyChanges(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -77,7 +76,7 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 				}
 			</div>
 			{toggleState && isSelf && (
-				<dialog ref={editor} className="profile-modal">
+				<dialog className="profile-modal">
 					<form onSubmit={ApplyChanges}>
 						<label htmlFor="profile-description">
 							Description
