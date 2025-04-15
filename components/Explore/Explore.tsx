@@ -5,11 +5,27 @@ import { APP_NAME } from '../../constants/globals'
 import Right_Arrow_Icon from "/right_arrow_icon.svg"
 import New_Tab_Icon from "/new_tab_icon.svg"
 import Post from './Post.tsx'
+import { CreatePost } from "../../api/posts.tsx"
 import "./Explore.css"
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 export default function Explore(){
     const [toggleState, setToggleState] = useState(false);
+
+    async function AddPost(e: FormEvent<HTMLFormElement>){
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget);
+		const image = formData.get("image") as File;
+		const data = new FormData();
+
+        data.append("title", formData.get("title") as string)
+        data.append("caption", formData.get("caption") as string)
+        if (image.type.startsWith("image")) {
+			data.append("image", image);
+		}
+        await CreatePost(data)
+        setToggleState(false);
+    }
     
     return (
         <div id="explore-page">
@@ -69,13 +85,25 @@ export default function Explore(){
                 </button>
             </div>
             {toggleState && (
-                <form className="post-form">
+                <form className="post-form" onSubmit={AddPost}>
                     <label htmlFor="post-title">Title</label>
-                    <input id="post-title" type="text" placeholder='Enter a title'/>
+                    <input 
+                        id="post-title" 
+                        name="title" 
+                        type="text" 
+                        placeholder='Enter a title'/>
                     <label htmlFor="post-caption">Caption</label>
-                    <input id="post-caption" type="text" placeholder='Enter a caption'/>
+                    <input 
+                        id="post-caption" 
+                        name="caption" 
+                        type="text" 
+                        placeholder='Enter a caption'/>
                     <label htmlFor="post-image">Image (optional)</label>
-                    <input id="post-image" type="file"/>
+                    <input 
+                        id="post-image" 
+                        name="image" 
+                        type="file"
+                        accept="image/png, image/jpg, image/jpeg"/>
                     <button type="reset" onClick={()=>{setToggleState(false)}}>Discard</button>
                     <button type="submit">Post</button>
                 </form>

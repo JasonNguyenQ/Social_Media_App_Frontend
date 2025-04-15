@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "../../api/users";
 import { FileBlobToURL } from "../../utilities/URL"
