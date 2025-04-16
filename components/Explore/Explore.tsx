@@ -5,12 +5,20 @@ import { APP_NAME } from '../../constants/globals'
 import Right_Arrow_Icon from "/right_arrow_icon.svg"
 import New_Tab_Icon from "/new_tab_icon.svg"
 import Post from './Post.tsx'
-import { CreatePost } from "../../api/posts.tsx"
+import { GetPosts, CreatePost } from "../../api/posts.tsx"
 import "./Explore.css"
 import { FormEvent, useState } from 'react';
+import { PostProps } from '../../constants/types.tsx';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Explore(){
     const [toggleState, setToggleState] = useState(false);
+
+    const { data: Posts } = useQuery<PostProps[]>({
+		queryKey: ["posts"],
+		queryFn: GetPosts,
+		initialData: [],
+	});
 
     async function AddPost(e: FormEvent<HTMLFormElement>){
         e.preventDefault()
@@ -63,20 +71,9 @@ export default function Explore(){
                     </li>
                 </ul>
                 <div className="content-container">
-                <Post PostInfo={{
-                    title: "First Post of the Website", 
-                    from: "Owner", 
-                    caption: "Hello, this is the first post of the website."}}/>
-
-                <Post PostInfo={{
-                    title: "Testing 1 2 3", 
-                    from: "Tester", 
-                    caption: "This is a test."}}/>
-                
-                <Post PostInfo={{
-                title: "...", 
-                from: "...", 
-                caption: "..."}}/>
+                    {Posts.map((post)=>{
+                        return <Post PostInfo={post}/>
+                    })}
                 </div>
                 <div>Placeholder</div>
                 <button className="create" onClick={()=>{setToggleState(true)}}>

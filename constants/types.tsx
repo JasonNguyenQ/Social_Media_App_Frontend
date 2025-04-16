@@ -38,4 +38,5 @@ export type PostProps = {
 	title: string;
 	image?: FileBlob;
 	caption: string;
+	createdAt: number;
 }

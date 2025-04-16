@@ -4,9 +4,10 @@
     --border-radius: 5px;
 
     width: 100%;
-    padding: 20px;
+    padding: 10px 20px;
     background-color: var(--neutral-clr-950);
     border-radius: 10px;
+    box-sizing: border-box;
 }
 
 .post > *{
@@ -25,6 +26,12 @@
     border-radius: 50%;
 
     background-color: var(--background);
+}
+
+.post .date{
+    display: block;
+    text-align: end;
+    font-size: .6rem;
 }
 
 .post .metadata{
@@ -59,6 +66,7 @@
     min-height: 300px;
     max-height: 900px;
     border-radius: var(--border-radius);
+    object-fit: cover;
 }
 
 .post .caption {

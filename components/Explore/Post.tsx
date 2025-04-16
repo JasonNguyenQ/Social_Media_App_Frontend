@@ -10,11 +10,18 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
         from,
         title,
         image,
-        caption
+        caption,
+        createdAt
     } = PostInfo;
+    
+    const timestamp = new Date(createdAt)
+    const date = (
+        timestamp.toLocaleDateString() == new Date().toLocaleDateString()
+    ) ? timestamp.toLocaleTimeString() : timestamp.toLocaleDateString()
     
     return (
         <div className="post">
+            <span className="date">{date}</span>
             <header>
                 <img src={FileBlobToURL(profilePicture, Person_Icon)} className="profile-picture"/>
                 <div className="metadata">

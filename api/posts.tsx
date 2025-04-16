@@ -1,4 +1,20 @@
-import { BASE_URL, ACCESS_KEY } from '../constants/globals' 
+import { BASE_URL, ACCESS_KEY } from '../constants/globals'
+import { PostProps } from '../constants/types'
+
+export async function GetPosts(): Promise<PostProps[]>{
+    try{
+        const response = await fetch(`${BASE_URL}/api/posts`, {
+            method: 'GET',
+            credentials: "include",
+        })
+        const posts = await response.json()
+        return Promise.resolve(posts)
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve([])
+    }
+}
 
 export async function CreatePost(form : FormData): Promise<string>{
     try{

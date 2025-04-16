@@ -1,5 +1,7 @@
 #explore-page{
     margin: 0;
+    height: 100vh;
+    overflow: hidden;
 }
 
 #explore-page .explore-container{
@@ -7,7 +9,8 @@
     gap: 150px;
     margin: 0px 20px;
     padding: 20px 0px;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 2fr 5fr 2fr;
+    height: 85%;
 }
 
 #explore-page .explore-container>*{
@@ -68,6 +71,7 @@
     display: flex;
     flex-direction: column;
     gap: 50px;
+    overflow-y: scroll;
 }
 
 #explore-page .create{
