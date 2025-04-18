@@ -3,9 +3,11 @@ import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import "./Post.css"
+import { Link } from "react-router-dom";
 
 export default function Post( {PostInfo} : {PostInfo: PostProps}){
     const {
+        id,
         profilePicture,
         from,
         title,
@@ -23,7 +25,9 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
         <div className="post">
             <span className="date">{date}</span>
             <header>
-                <img src={FileBlobToURL(profilePicture, Person_Icon)} className="profile-picture"/>
+                <Link to={`/search/${id}`}>
+                    <img src={FileBlobToURL(profilePicture, Person_Icon)} className="profile-picture"/>
+                </Link>
                 <div className="metadata">
                     <h2>{title}</h2>
                     <span>@{from}</span>

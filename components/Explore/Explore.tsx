@@ -75,7 +75,6 @@ export default function Explore(){
                         return <Post PostInfo={post}/>
                     })}
                 </div>
-                <div>Placeholder</div>
                 <button className="create" onClick={()=>{setToggleState(true)}}>
                     <span>+</span>
                     <span>Create Post</span>
