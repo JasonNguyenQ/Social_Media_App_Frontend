@@ -5,11 +5,18 @@
 	--message-roundness: 15px;
 	--message-input-height: 30px;
 	--message-container-padding: 20px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	height: 100vh;
 }
 
 #messages-page .container {
 	display: flex;
-	width: 90%;
+	width: 100%;
+	flex: 1;
+	overflow: hidden;
+	padding: 20px 0px;
 }
 
 #messages-page .message-container {
@@ -17,9 +24,7 @@
 	flex-direction: column;
 	justify-content: end;
 	position: relative;
-	width: 100%;
-	height: var(--container-height);
-	padding: var(--message-container-padding);
+	padding: 0px var(--message-container-padding);
 	overflow: hidden;
 	flex: 1;
 }
@@ -28,7 +33,7 @@
 	position: absolute;
 	left: 0;
 	width: 1px;
-	height: var(--container-height);
+	height: 100%;
 	box-shadow: 0px 0px 2px 0px black;
 	content: "";
 }
@@ -131,7 +136,6 @@
 }
 
 #messages-page .threads-container {
-	height: var(--container-height);
 	min-width: 25%;
 	max-width: 75%;
 	resize: horizontal;
