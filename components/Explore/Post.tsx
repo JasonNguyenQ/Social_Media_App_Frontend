@@ -1,11 +1,12 @@
-import { PostProps } from "../../constants/types";
+import { CommentProps, PostProps } from "../../constants/types";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import "./Post.css"
 import { Link } from "react-router-dom";
+import Comment from "./Comment"
 
-export default function Post( {PostInfo} : {PostInfo: PostProps}){
+export default function Post( {PostInfo, Comments} : {PostInfo: PostProps, Comments: CommentProps[]}){
     const {
         id,
         profilePicture,
@@ -41,6 +42,9 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
             </div>
             <div className="actions"></div>
             <ul className="comments"></ul>
+            {Comments.map((comment)=>{
+                return <Comment Comment={comment}></Comment>
+            })}
         </div>
     );
 }

@@ -41,3 +41,11 @@ export type PostProps = {
 	caption: string;
 	createdAt: number;
 }
+
+export type CommentProps = {
+	id: number;
+	profilePicture?: FileBlob;
+	from: string;
+	comment: string;
+	createdAt: number;
+}
