@@ -22,7 +22,7 @@ export async function getThreads(): Promise<ThreadInfo[]>{
 
 export async function addMessage(variables : { threadId: string, message: string}): Promise<string>{
     try{
-        const { threadId, message } = variables
+        const { threadId } = variables
 
         if (threadId === "") return Promise.reject("Incomplete")
 
@@ -35,7 +35,7 @@ export async function addMessage(variables : { threadId: string, message: string
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({threadId: threadId, message: message})
+            body: JSON.stringify(variables)
         })
         return Promise.resolve("Finished")
     }

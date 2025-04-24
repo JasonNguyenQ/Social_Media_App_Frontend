@@ -72,20 +72,7 @@ export default function Explore(){
                 </ul>
                 <div className="content-container">
                     {Posts.map((post)=>{
-                        return <Post PostInfo={post} Comments={[
-                            {
-                                id: 1,
-                                from: "John Doe",
-                                comment: "First",
-                                createdAt: Date.now()
-                            },
-                            {
-                                id: 2,
-                                from: "Cammy Smith",
-                                comment: "Great Post",
-                                createdAt: Date.now()
-                            }
-                        ]}/>
+                        return <Post PostInfo={post}/>
                     })}
                 </div>
                 <button className="create" onClick={()=>{setToggleState(true)}}>

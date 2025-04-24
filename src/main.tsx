@@ -23,10 +23,10 @@ createRoot(document.getElementById("root")!).render(
 						<Route path="*" element={<Login />} />
 						<Route path="/register" element={<SignUp />} />
 						<Route path="/search/:userid" element={<ProfileRouter />} />
+						<Route path="/explore" element={<Explore />} />
 
 						<Route element={<ProtectedRoutes />}>
 							<Route path="/messages" element={<Messages />} />
-							<Route path="/explore" element={<Explore />} />
 							<Route path="/profile" element={<ProfileRouter/>} />
 						</Route>
 					</Routes>

@@ -33,6 +33,7 @@ export type UserIdentifier = {
 };
 
 export type PostProps = {
+	postId: number,
 	id: number;
 	profilePicture?: FileBlob;
 	from: string;

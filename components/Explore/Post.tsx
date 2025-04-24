@@ -2,12 +2,20 @@ import { CommentProps, PostProps } from "../../constants/types";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
+import Comment_Icon from "/comment_icon.svg"
+import Like_Icon from "/like_icon.svg"
+import Up_Icon from "/up_icon.svg"
+import Down_Icon from "/down_icon.svg"
 import "./Post.css"
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Comment from "./Comment"
+import { useToggle } from "../../hooks/useToggle"
+import { GetComments, CreateComment } from "../../api/posts";
 
-export default function Post( {PostInfo, Comments} : {PostInfo: PostProps, Comments: CommentProps[]}){
+export default function Post( {PostInfo} : {PostInfo: PostProps}){
     const {
+        postId,
         id,
         profilePicture,
         from,
@@ -16,11 +24,28 @@ export default function Post( {PostInfo, Comments} : {PostInfo: PostProps, Comme
         caption,
         createdAt
     } = PostInfo;
+
+    const [Comments, setComments] = useState<CommentProps[]>([]);
     
+    const [toggleState, Toggle] = useToggle(false, 100);
+    const textInput = useRef<HTMLInputElement>(null);
     const timestamp = new Date(createdAt)
     const date = (
         timestamp.toLocaleDateString() == new Date().toLocaleDateString()
     ) ? timestamp.toLocaleTimeString() : timestamp.toLocaleDateString()
+
+    async function AddComment(){
+        const comment = textInput.current!.value
+        if (comment === "") return;
+        await CreateComment({postId: postId, comment: comment})
+        textInput.current!.value = ""
+    }
+    
+    async function fetchComments(){
+        const postComments = await GetComments(postId)
+        setComments(postComments)
+        Toggle()
+    }
     
     return (
         <div className="post">
@@ -37,14 +62,27 @@ export default function Post( {PostInfo, Comments} : {PostInfo: PostProps, Comme
             <img src={FileBlobToURL(image)} className="image"/>
             <div className="caption">{caption}</div>
             <div className="input-container">
-                <input placeholder="Comment..."></input>
-                <button><img src={Send_Icon} alt="Send"/></button>
+                <input placeholder="Comment..." type="text" ref={textInput}></input>
+                <button onClick={AddComment}><img src={Send_Icon} alt="Send"/></button>
             </div>
-            <div className="actions"></div>
-            <ul className="comments"></ul>
-            {Comments.map((comment)=>{
-                return <Comment Comment={comment}></Comment>
-            })}
+            <div className="post-actions">
+                <div className="post-action">
+                    <img src={Like_Icon}/>
+                    <div>Like</div>
+                </div>
+                <div className="post-action" onClick={fetchComments}>
+                    <img src={Comment_Icon}/>
+                    <div>Comments</div>
+                    <img src={(toggleState) ? Up_Icon : Down_Icon}/>
+                </div>
+            </div>
+            {toggleState && 
+                <ul className="comments">
+                    {Comments.map((comment, index)=>{
+                        return <Comment Comment={comment} key={index}></Comment>
+                    })}
+                </ul>
+            }
         </div>
     );
 }

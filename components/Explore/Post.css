@@ -107,3 +107,80 @@
 .post .input-container button:hover{
     background-color: var(--neutral-clr-600);
 }
+
+.post .post-actions{
+    display: flex;
+    gap: 2px;
+}
+
+.post .post-actions>*{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 5px;
+    font-size: .8rem;
+    border-radius: 5px;
+}
+
+.post .post-actions>*:hover{
+    background-color: var(--background);
+}
+
+.post .post-action>img{
+    --img-size: 15px;
+    width: var(--img-size);
+    height: var(--img-size);
+}
+
+.post .comments{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.post .comment{
+    background-color: var(--background);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    font-size: .8rem;
+}
+
+.post .comment>header{
+    display: flex;
+    justify-content: space-between;
+    margin: 0px;
+    margin-bottom: 5px;
+}
+
+.post .comment-info{
+    display: flex;
+    align-items: center;
+    font-size: .75rem;
+    font-weight: bold;
+    gap: var(--gap);
+}
+
+.post .comment-pfp{
+    --img-size: 20px;
+    width: var(--img-size);
+    height: var(--img-size);
+    background-color: var(--neutral-clr-950);
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.post .comment-date{
+    font-weight: 500;
+    font-size: .5rem;
+    justify-self: end;
+}
+
+.post .comment>p{
+    margin: 0;
+    padding: 5px 10px;
+    background-color: white;
+    border-radius: var(--border-radius);
+}
