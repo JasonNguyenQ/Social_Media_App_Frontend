@@ -1,8 +1,8 @@
 #explore-page{
-    margin: 0;
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    margin: 0;
 }
 
 #explore-page .explore-container{
@@ -10,9 +10,9 @@
     gap: 150px;
     margin: 0px 20px;
     padding: 20px 0px;
+    overflow: hidden;
     grid-template-columns: 2fr 5fr 2fr;
     flex: 1;
-    overflow: hidden;
 }
 
 #explore-page .explore-container>*{
@@ -79,24 +79,24 @@
 
 #explore-page .create{
     --size: 5ch;
-    cursor: pointer;
     display: flex;
     flex-direction: row;
-    position: fixed;
-    gap: 2ch;
     align-items: center;
+    gap: 2ch;
+    position: fixed;
+    cursor: pointer;
     bottom: 40px;
     left: 72%;
     width: var(--size);
     height: var(--size);
     padding-left: 2ch;
-    border-radius: calc(var(--size)/2);
-    text-wrap-mode: nowrap;
-    overflow: hidden;
-    transition: .5s all;
-    color: white;
-    background-color: hsl(240,60%,50%);
     border: none;
+    border-radius: calc(var(--size)/2);
+    background-color: hsl(240,60%,50%);
+    color: white;
+    overflow: hidden;
+    text-wrap-mode: nowrap;
+    transition: .5s all;
 }
 
 #explore-page .create:hover{
@@ -104,13 +104,13 @@
 }
 
 #explore-page .post-form{
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    padding: 20px;
     border: 1px solid var(--neutral-clr-500);
     background-color: var(--neutral-clr-900);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+    transform: translate(-50%,-50%);
 }
