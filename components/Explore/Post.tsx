@@ -1,5 +1,6 @@
 import { CommentProps, PostProps } from "../../constants/types";
 import { FileBlobToURL } from "../../utilities/URL";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import Comment_Icon from "/comment_icon.svg"
@@ -12,6 +13,7 @@ import { Link } from "react-router-dom";
 import Comment from "./Comment"
 import { useToggle } from "../../hooks/useToggle"
 import { GetComments, CreateComment } from "../../api/posts";
+import { GetReaction, CreateReaction, DeleteReaction } from "../../api/reactions";
 
 export default function Post( {PostInfo} : {PostInfo: PostProps}){
     const {
@@ -25,7 +27,26 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
         createdAt
     } = PostInfo;
 
+    const queryClient = useQueryClient();
     const [Comments, setComments] = useState<CommentProps[]>([]);
+
+    const { data: Reactions } = useQuery<string[]>({
+		queryKey: ["postReactions", {postId}],
+		queryFn: async ()=>{return await GetReaction({type: "post", id: postId})},
+		initialData: [],
+	});
+
+    const { mutate: handleReaction } = useMutation({
+        mutationFn: async (reaction: string) => {
+            if(!Reactions.includes(reaction)) await CreateReaction({type: "post", id: postId, reaction: reaction})
+            else await DeleteReaction({type: "post", id: postId, reaction: reaction})
+        },
+        onSuccess: ()=>{
+            queryClient.invalidateQueries({
+                queryKey: ["postReactions", {postId}]
+            })
+        }
+    })
     
     const [toggleState, Toggle] = useToggle(false, 100);
     const textInput = useRef<HTMLInputElement>(null);
@@ -66,13 +87,13 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
                 <button onClick={AddComment}><img src={Send_Icon} alt="Send"/></button>
             </div>
             <div className="post-actions">
-                <div className="post-action">
+                <div className="post-action" onClick={()=>{handleReaction("Like")}}>
                     <img src={Like_Icon}/>
-                    <div>Like</div>
+                    <span>{Reactions.includes("Like") ? "Unlike" : "Like"}</span>
                 </div>
                 <div className="post-action" onClick={fetchComments}>
                     <img src={Comment_Icon}/>
-                    <div>Comments</div>
+                    <span>Comments</span>
                     <img src={(toggleState) ? Up_Icon : Down_Icon}/>
                 </div>
             </div>
