@@ -51,6 +51,28 @@ export async function GetComments(postId: number): Promise<CommentProps[]>{
     }
 }
 
+export async function CountComments(id: number): Promise<number>{
+    try{
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        const response = await fetch(`${BASE_URL}/api/posts/comments/count/${id}`,
+            {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        const count = await response.json()
+
+        return Promise.resolve(Number(count))
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve(0)
+    }
+}
+
 export async function CreateComment(variables : { postId: number, comment: string}): Promise<string>{
     try{
         const token = sessionStorage.getItem(ACCESS_KEY)

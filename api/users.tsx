@@ -12,7 +12,7 @@ export default async function fetchUser(id: number | undefined): Promise<Profile
     }
     
     try{
-        if(id === undefined) Promise.reject(rej)
+        if(id === undefined) Promise.resolve(rej)
         const user = await fetch(`${BASE_URL}/api/users/?id=${id}`)
         const { username, firstName, lastName, description, profilePicture, backgroundImage } = await user.json()
         return Promise.resolve({

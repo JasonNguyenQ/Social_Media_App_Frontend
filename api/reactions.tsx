@@ -13,12 +13,38 @@ export async function GetReaction(variables : { type: string, id: number }): Pro
             }
         })
         const reactions = await response.json()
-        console.log(reactions)
+
         return Promise.resolve(reactions)
     }
     catch(err){
         console.log(err)
         return Promise.resolve([])
+    }
+}
+
+export async function CountReaction({type, id, reaction}: {
+    type: string,
+    id: number,
+    reaction: string
+}): Promise<number>{
+    try{
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        const response = await fetch(`${BASE_URL}/api/reactions/${type}/${id}?reaction=${reaction}`,
+            {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        const count = await response.json()
+
+        return Promise.resolve(Number(count))
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve(0)
     }
 }
 

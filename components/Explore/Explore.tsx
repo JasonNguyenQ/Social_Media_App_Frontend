@@ -17,7 +17,8 @@ export default function Explore(){
     const { data: Posts } = useQuery<PostProps[]>({
 		queryKey: ["posts"],
 		queryFn: GetPosts,
-		initialData: [],
+        staleTime: Infinity,
+        gcTime: 1000*60*5
 	});
 
     async function AddPost(e: FormEvent<HTMLFormElement>){
@@ -71,7 +72,7 @@ export default function Explore(){
                     </li>
                 </ul>
                 <div className="content-container">
-                    {Posts.map((post)=>{
+                    {Posts?.map((post)=>{
                         return <Post PostInfo={post}/>
                     })}
                 </div>

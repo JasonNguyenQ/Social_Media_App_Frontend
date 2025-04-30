@@ -4,11 +4,13 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import InputField from "./Fields";
 import "./SignUp.css";
 import { FormEvent } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Login() {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const path = location.state?.from?.pathname || "/profile";
+	const queryClient = useQueryClient();
 
 	async function Validate(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -31,6 +33,9 @@ export default function Login() {
 				throw new Error("UNAUTHORIZED");
 			})
 			.then((data) => {
+				queryClient.invalidateQueries({
+					queryKey: ["postReactions"],
+				})
 				sessionStorage.setItem("access_token", data["access_token"]);
 				navigate(path);
 			})

@@ -1,6 +1,6 @@
-import { CommentProps, PostProps } from "../../constants/types";
+import { CommentProps, PostProps, UserIdentifier } from "../../constants/types";
 import { FileBlobToURL } from "../../utilities/URL";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import Comment_Icon from "/comment_icon.svg"
@@ -8,12 +8,15 @@ import Like_Icon from "/like_icon.svg"
 import Up_Icon from "/up_icon.svg"
 import Down_Icon from "/down_icon.svg"
 import "./Post.css"
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import Comment from "./Comment"
 import { useToggle } from "../../hooks/useToggle"
-import { GetComments, CreateComment } from "../../api/posts";
-import { GetReaction, CreateReaction, DeleteReaction } from "../../api/reactions";
+import { GetComments, CreateComment, CountComments } from "../../api/posts";
+import { GetReaction, CreateReaction, DeleteReaction, CountReaction } from "../../api/reactions";
+import { NumericalAbbr } from "../../utilities/Abbreviation";
+import { ACCESS_KEY, AUTH_VALIDATION_TIME } from '../../constants/globals'
+import Authorize from "../../api/Auth";
 
 export default function Post( {PostInfo} : {PostInfo: PostProps}){
     const {
@@ -28,23 +31,81 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
     } = PostInfo;
 
     const queryClient = useQueryClient();
-    const [Comments, setComments] = useState<CommentProps[]>([]);
+
+    const token = sessionStorage.getItem(ACCESS_KEY)
+    const {data: userInfo} = useQuery<UserIdentifier>({
+        queryKey: ["auth", {token}],
+        queryFn: async () => await Authorize(token),
+        refetchInterval: AUTH_VALIDATION_TIME,
+        staleTime: AUTH_VALIDATION_TIME
+    })
+
+    const loggedIn = userInfo?.id !== -1
+
+    const { data: Comments, refetch: refetchComments } = useQuery<CommentProps[]>({
+		queryKey: ["postComments", {postId}],
+		queryFn: async ()=>{return await GetComments(postId)},
+        placeholderData: keepPreviousData,
+        enabled: false,
+        staleTime: 1000*60,
+        gcTime: 1000*60*5
+	});
 
     const { data: Reactions } = useQuery<string[]>({
 		queryKey: ["postReactions", {postId}],
 		queryFn: async ()=>{return await GetReaction({type: "post", id: postId})},
-		initialData: [],
+        placeholderData: keepPreviousData,
+        staleTime: 1000*60,
+        gcTime: 1000*60*5
 	});
+    
+    let { data: nLikes } = useQuery<number>({
+        queryKey: ["postNLikes", {postId}],
+		queryFn: async ()=>{return await CountReaction({type: "post", id: postId, reaction: "Like"})},
+        placeholderData: keepPreviousData,
+        staleTime: 1000*60,
+        gcTime: 1000*60*5
+	});
+
+    let { data: nComments } = useQuery<number>({
+        queryKey: ["postNComments", {postId}],
+        queryFn: async ()=>{return await CountComments(postId)},
+        placeholderData: keepPreviousData,
+        staleTime: 1000*60,
+        gcTime: 1000*60*5
+    });
 
     const { mutate: handleReaction } = useMutation({
         mutationFn: async (reaction: string) => {
-            if(!Reactions.includes(reaction)) await CreateReaction({type: "post", id: postId, reaction: reaction})
-            else await DeleteReaction({type: "post", id: postId, reaction: reaction})
+            if(!loggedIn) return
+            if(!Reactions?.includes(reaction)){
+                await CreateReaction({type: "post", id: postId, reaction: reaction})
+                queryClient.setQueryData(["postReactions", {postId}], ()=>{
+                    if(Reactions) return [...Reactions, "Like"]
+                    return ["Like"]
+                })
+                queryClient.setQueryData(["postNLikes", {postId}], (nLikes || 0)+1)
+            }
+            else {
+                await DeleteReaction({type: "post", id: postId, reaction: reaction})
+                queryClient.setQueryData(["postReactions", {postId}], Reactions?.filter((reaction)=>reaction !== "Like"))
+                queryClient.setQueryData(["postNLikes", {postId}], (nLikes || 1)-1)
+            }
+        },
+    })
+
+    const { mutate: handleComments } = useMutation({
+        mutationFn: async ()=>{
+            const comment = textInput.current!.value
+            if (comment === "") return;
+            await CreateComment({postId: postId, comment: comment})
+            textInput.current!.value = ""
         },
         onSuccess: ()=>{
             queryClient.invalidateQueries({
-                queryKey: ["postReactions", {postId}]
+                queryKey: ["postNComments", {postId}]
             })
+            refetchComments()
         }
     })
     
@@ -54,18 +115,11 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
     const date = (
         timestamp.toLocaleDateString() == new Date().toLocaleDateString()
     ) ? timestamp.toLocaleTimeString() : timestamp.toLocaleDateString()
-
-    async function AddComment(){
-        const comment = textInput.current!.value
-        if (comment === "") return;
-        await CreateComment({postId: postId, comment: comment})
-        textInput.current!.value = ""
-    }
     
     async function fetchComments(){
-        const postComments = await GetComments(postId)
-        setComments(postComments)
         Toggle()
+        if (queryClient.getQueryData(["postComments", {postId}])) return
+        refetchComments()
     }
     
     return (
@@ -83,23 +137,23 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
             <img src={FileBlobToURL(image)} className="image"/>
             <div className="caption">{caption}</div>
             <div className="input-container">
-                <input placeholder="Comment..." type="text" ref={textInput}></input>
-                <button onClick={AddComment}><img src={Send_Icon} alt="Send"/></button>
+                <input placeholder="Comment..." type="text" ref={textInput} disabled={!loggedIn}></input>
+                <button onClick={()=>{handleComments()}}><img src={Send_Icon} alt="Send"/></button>
             </div>
             <div className="post-actions">
                 <div className="post-action" onClick={()=>{handleReaction("Like")}}>
                     <img src={Like_Icon}/>
-                    <span>{Reactions.includes("Like") ? "Unlike" : "Like"}</span>
+                    <span>{NumericalAbbr(nLikes)} • {Reactions?.includes("Like") ? "Unlike" : "Like"}</span>
                 </div>
                 <div className="post-action" onClick={fetchComments}>
                     <img src={Comment_Icon}/>
-                    <span>Comments</span>
+                    <span>{NumericalAbbr(nComments)} • Comments</span>
                     <img src={(toggleState) ? Up_Icon : Down_Icon}/>
                 </div>
             </div>
             {toggleState && 
                 <ul className="comments">
-                    {Comments.map((comment, index)=>{
+                    {Comments?.map((comment, index)=>{
                         return <Comment Comment={comment} key={index}></Comment>
                     })}
                 </ul>
