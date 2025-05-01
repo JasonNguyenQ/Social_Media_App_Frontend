@@ -10,29 +10,27 @@ import Navbar from "../Navbar/Navbar.tsx"
 
 export default function ProfileRouter(){
     const { userid } = useParams()
+
+    const defaultUser : ProfileProps = {
+        username: "Loading...",
+        firstName: "Loading",
+        lastName: "User..."
+    }
     
     if (userid) {
-        const { data: userInfo, isLoading } = useQuery<ProfileProps>({
+        const { data: userInfo } = useQuery<ProfileProps>({
             queryKey: ["userInfo", {userid}],
-            queryFn: ()=>fetchUser(Number(userid)),
-            initialData: {
-                username : "",
-                firstName: "",
-                lastName: ""
-            }
+            queryFn: () => fetchUser(Number(userid)),
         })
 
-        if(isLoading){
-            return <div>LOADING</div>
-        }
         return (
             <>
                 <Helmet>
-                    <title>"{userInfo.username}" | {APP_NAME}</title>
+                    <title>"{(userInfo || defaultUser).username}" | {APP_NAME}</title>
                     <meta name='description' content='User Profile Page' />
                 </Helmet>
                 <Navbar/>
-                <Profile userInfo={userInfo} isSelf={false}/>
+                <Profile userInfo={userInfo || defaultUser} isSelf={false}/>
             </>
         );
     }

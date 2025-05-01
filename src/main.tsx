@@ -12,7 +12,14 @@ const SignUp = lazy(()=> import("../components/Register/SignUp.tsx"));
 const Login = lazy(()=> import("../components/Register/Login.tsx"));
 const ProfileRouter = lazy(()=> import("../components/Profile/ProfileRouter.tsx"))
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000*60,
+            gcTime: 1000*60*5,
+		}
+	}
+});
 
 createRoot(document.getElementById("root")!).render(
 	<HelmetProvider>

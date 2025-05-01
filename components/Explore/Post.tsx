@@ -1,6 +1,6 @@
 import { CommentProps, PostProps, UserIdentifier } from "../../constants/types";
 import { FileBlobToURL } from "../../utilities/URL";
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import Comment_Icon from "/comment_icon.svg"
@@ -33,47 +33,52 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
     const queryClient = useQueryClient();
 
     const token = sessionStorage.getItem(ACCESS_KEY)
-    const {data: userInfo} = useQuery<UserIdentifier>({
-        queryKey: ["auth", {token}],
-        queryFn: async () => await Authorize(token),
-        refetchInterval: AUTH_VALIDATION_TIME,
-        staleTime: AUTH_VALIDATION_TIME
+
+    const [
+        { data: userInfo },
+        { data: Comments, refetch: refetchComments },
+        { data: Reactions },
+        { data: nLikes },
+        { data: nComments }
+    ] : [
+        { data: UserIdentifier },
+        { data: CommentProps[], refetch: Function },
+        { data: string[] },
+        { data: number },
+        { data: number }
+    ] = useQueries({
+        queries: [
+            {
+                queryKey: ["auth", {token}],
+                queryFn: async () => await Authorize(token),
+                refetchInterval: AUTH_VALIDATION_TIME,
+                staleTime: AUTH_VALIDATION_TIME
+            },
+            {
+                queryKey: ["postComments", {postId}],
+                queryFn: async () => await GetComments(postId),
+                placeholderData: keepPreviousData,
+                enabled: false,
+            },
+            {
+                queryKey: ["postReactions", {postId}],
+                queryFn: async () => await GetReaction({type: "post", id: postId}),
+                placeholderData: keepPreviousData,
+            },
+            {
+                queryKey: ["postNLikes", {postId}],
+                queryFn: async () => await CountReaction({type: "post", id: postId, reaction: "Like"}),
+                placeholderData: keepPreviousData,
+            },
+            {
+                queryKey: ["postNComments", {postId}],
+                queryFn: async ()=>{return await CountComments(postId)},
+                placeholderData: keepPreviousData,
+            }
+        ]
     })
 
     const loggedIn = userInfo?.id !== -1
-
-    const { data: Comments, refetch: refetchComments } = useQuery<CommentProps[]>({
-		queryKey: ["postComments", {postId}],
-		queryFn: async ()=>{return await GetComments(postId)},
-        placeholderData: keepPreviousData,
-        enabled: false,
-        staleTime: 1000*60,
-        gcTime: 1000*60*5
-	});
-
-    const { data: Reactions } = useQuery<string[]>({
-		queryKey: ["postReactions", {postId}],
-		queryFn: async ()=>{return await GetReaction({type: "post", id: postId})},
-        placeholderData: keepPreviousData,
-        staleTime: 1000*60,
-        gcTime: 1000*60*5
-	});
-    
-    let { data: nLikes } = useQuery<number>({
-        queryKey: ["postNLikes", {postId}],
-		queryFn: async ()=>{return await CountReaction({type: "post", id: postId, reaction: "Like"})},
-        placeholderData: keepPreviousData,
-        staleTime: 1000*60,
-        gcTime: 1000*60*5
-	});
-
-    let { data: nComments } = useQuery<number>({
-        queryKey: ["postNComments", {postId}],
-        queryFn: async ()=>{return await CountComments(postId)},
-        placeholderData: keepPreviousData,
-        staleTime: 1000*60,
-        gcTime: 1000*60*5
-    });
 
     const { mutate: handleReaction } = useMutation({
         mutationFn: async (reaction: string) => {

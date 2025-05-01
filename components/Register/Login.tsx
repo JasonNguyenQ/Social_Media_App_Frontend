@@ -36,6 +36,13 @@ export default function Login() {
 				queryClient.invalidateQueries({
 					queryKey: ["postReactions"],
 				})
+				queryClient.invalidateQueries({
+					queryKey: ["threads"],
+				})
+				queryClient.invalidateQueries({
+					queryKey: ["messages"],
+				})
+				sessionStorage.removeItem("activeThread")
 				sessionStorage.setItem("access_token", data["access_token"]);
 				navigate(path);
 			})

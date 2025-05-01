@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { MessageInfo, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
 import Navbar from "../Navbar/Navbar";
@@ -9,7 +9,6 @@ import { io, Socket } from "socket.io-client";
 import { flushSync } from "react-dom";
 import { useThrottle } from "../../hooks/useThrottle";
 import { getThreads, getMessages, addMessage } from "../../api/messages";
-import Authorize from "../../api/Auth";
 import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
@@ -17,27 +16,45 @@ import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 
 export default function Messages() {
+	// const socket = useMemo<Socket>(() => io(BASE_URL), []);
 	const token = sessionStorage.getItem(ACCESS_KEY);
-	const socket = useMemo<Socket>(() => io(BASE_URL), []);
 	const [activeThread, setActiveThread] = useState<string>("");
-	const [messages, setMessages] = useState<Array<MessageInfo>>([]);
 	const messageContainer = useRef<HTMLDivElement>(null);
 	const textInput = useRef<HTMLInputElement>(null);
 	const [viewOlder, setViewOlder] = useThrottle<boolean>(false, 100);
 
-	const { data: userIdentifier } = useQuery<UserIdentifier>({
-		queryKey: ["auth", { token }],
-		queryFn: () => Authorize(token),
-	});
+	const queryClient = useQueryClient()
+	const userIdentifier : UserIdentifier | undefined = queryClient.getQueryData(["auth", { token }])
 
 	const username = userIdentifier?.username || "";
 
-	const { data: threads } = useQuery<ThreadInfo[]>({
-		queryKey: ["threads"],
-		queryFn: getThreads,
-		initialData: [],
+	const [
+		{ data: threads },
+		{ data: messages },
+		{ data: socket },
+	] :
+	[
+		{ data: ThreadInfo[] },
+		{ data: MessageInfo[] },
+		{ data: Socket },
+	] = useQueries({
+		queries: [
+			{
+				queryKey: ["threads"],
+				queryFn: async () => await getThreads(),
+			},
+			{
+				queryKey: ["messages", {activeThread}],
+				queryFn: async () => await getMessages(activeThread),
+			},
+			{
+				queryKey: ["socket"],
+				queryFn: ()=>io(BASE_URL),
+				staleTime: Infinity
+			}
+		]
 	});
-
+	
 	function HandleScroll() {
 		const element = messageContainer.current!;
 		const scrollHeight = element.scrollHeight;
@@ -65,7 +82,7 @@ export default function Messages() {
 
 	function EnterMessage(e: KeyboardEvent) {
 		if (e.key === "Enter") SendMessage();
-	}
+	}	
 
 	async function SendMessage() {
 		const value = textInput.current!.value;
@@ -79,11 +96,7 @@ export default function Messages() {
 		};
 
 		textInput.current!.value = "";
-		flushSync(() => {
-			setMessages((prev) => [...prev, message]);
-		});
-
-		scrollToLastMessage();
+		queryClient.setQueryData(["messages", {activeThread}], (prev: MessageInfo[])=> [...prev, message])
 	}
 
 	function CreateMessage(index: number, message: MessageInfo) {
@@ -112,10 +125,8 @@ export default function Messages() {
 	async function ThreadHandler(thread: ThreadInfo) {
 		socket.emit("join", thread.threadId);
 		socket.emit("leave", activeThread);
-		const currentMessages = await getMessages(thread.threadId);
 
 		flushSync(() => {
-			setMessages(currentMessages);
 			setActiveThread(thread.threadId);
 		});
 
@@ -133,28 +144,28 @@ export default function Messages() {
 			timeStamp: response.timeStamp,
 		};
 
-		flushSync(() => {
-			setMessages((prev) => [...prev, message]);
-		});
-
-		if (!viewOlder) scrollToLastMessage();
+		queryClient.setQueryData(["messages", {activeThread}], (prev: MessageInfo[])=> [...prev, message])
 	}
 
 	useEffect(() => {
-		return () => {
-			socket.disconnect();
-		};
+		const activeThread = sessionStorage.getItem("activeThread")
+		if(activeThread) setActiveThread(activeThread)
 	}, []);
 
 	useEffect(() => {
-		socket.on("receive", listener);
+		sessionStorage.setItem("activeThread", activeThread)
+		socket?.on("receive", listener);
 		textInput.current!.addEventListener("keypress", EnterMessage);
 
 		return () => {
-			socket.off("receive", listener);
+			socket?.off("receive", listener);
 			textInput.current?.removeEventListener("keypress", EnterMessage);
 		};
 	}, [viewOlder, activeThread]);
+
+	useEffect(()=>{
+		if (!viewOlder || messages?.at(-1)?.from === username) scrollToLastMessage();
+	},[messages])
 
 	return (
 		<div id={"messages-page"}>
@@ -165,7 +176,7 @@ export default function Messages() {
 			<Navbar />
 			<div className="container">
 				<div className="threads-container">
-					{threads.map((thread: ThreadInfo) => {
+					{threads?.map((thread: ThreadInfo) => {
 						return (
 							<div
 								key={thread.threadId}
@@ -188,8 +199,7 @@ export default function Messages() {
 						ref={messageContainer}
 						onScroll={HandleScroll}
 					>
-						{messages.length > 0 &&
-							messages.map((message, index) => CreateMessage(index, message))}
+						{messages?.map((message, index) => CreateMessage(index, message))}
 					</div>
 					<div className="message-field">
 						<input

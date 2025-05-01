@@ -24,7 +24,7 @@ export async function addMessage(variables : { threadId: string, message: string
     try{
         const { threadId } = variables
 
-        if (threadId === "") return Promise.reject("Incomplete")
+        if (threadId === "") return Promise.resolve("Incomplete")
 
         const token = sessionStorage.getItem(ACCESS_KEY)
 
@@ -62,6 +62,7 @@ export async function getMessages(threadId: string | undefined): Promise<Message
             createdAt: Date,
         }
 
+        
         const messages: message[] = await response.json()
         const returned = messages.map((message)=>({
             from: message.username, 
