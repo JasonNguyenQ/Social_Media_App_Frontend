@@ -132,14 +132,14 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
             <span className="date">{date}</span>
             <header>
                 <Link to={`/search/${id}`}>
-                    <img src={FileBlobToURL(profilePicture, Person_Icon)} className="profile-picture"/>
+                    <img src={FileBlobToURL(profilePicture, Person_Icon)} className="profile-picture" alt={`Post titled: ${title} by ${from}`}/>
                 </Link>
                 <div className="metadata">
                     <h2>{title}</h2>
                     <span>@{from}</span>
                 </div>
             </header>
-            <img src={FileBlobToURL(image)} className="image"/>
+            <img src={FileBlobToURL(image)} className="image" alt="post image"/>
             <div className="caption">{caption}</div>
             <div className="input-container">
                 <input placeholder="Comment..." type="text" ref={textInput} disabled={!loggedIn}></input>
@@ -147,13 +147,13 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
             </div>
             <div className="post-actions">
                 <div className="post-action" onClick={()=>{handleReaction("Like")}}>
-                    <img src={Like_Icon}/>
+                    <img src={Like_Icon} alt="like"/>
                     <span>{NumericalAbbr(nLikes)} • {Reactions?.includes("Like") ? "Unlike" : "Like"}</span>
                 </div>
                 <div className="post-action" onClick={fetchComments}>
-                    <img src={Comment_Icon}/>
+                    <img src={Comment_Icon} alt="comment"/>
                     <span>{NumericalAbbr(nComments)} • Comments</span>
-                    <img src={(toggleState) ? Up_Icon : Down_Icon}/>
+                    <img src={(toggleState) ? Up_Icon : Down_Icon} alt="dropdown"/>
                 </div>
             </div>
             {toggleState && 

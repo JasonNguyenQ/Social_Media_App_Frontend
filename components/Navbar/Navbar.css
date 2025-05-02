@@ -73,7 +73,7 @@
 	position: relative;
 	cursor: pointer;
 	padding: 2px;
-	color: var(--neutral-clr-400);
+	color: var(--neutral-clr-300);
 	overflow: hidden;
 	transition: all .5s;
 }

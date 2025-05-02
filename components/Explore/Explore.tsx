@@ -47,7 +47,7 @@ export default function Explore(){
                 <ul className="actions">
                     <li>
                         Filters
-                        <img src={Right_Arrow_Icon}/>
+                        <img src={Right_Arrow_Icon} alt={"dropdown"}/>
                         <div className="filters">
                             Placeholder
                         </div>
@@ -55,25 +55,25 @@ export default function Explore(){
                     <li>
                         <Link to={""} target='_blank'>
                             How it works
-                            <img src={New_Tab_Icon}/>
+                            <img src={New_Tab_Icon} alt={"link"}/>
                         </Link>
                     </li>
                     <li>
                         <Link to={""} target='_blank'>
                             Rules and Regulations
-                            <img src={New_Tab_Icon}/>
+                            <img src={New_Tab_Icon} alt={"link"}/>
                         </Link>
                     </li>
                     <li>
                         <Link to={""} target='_blank'>
                             Report
-                            <img src={New_Tab_Icon}/>
+                            <img src={New_Tab_Icon} alt={"link"}/>
                         </Link>
                     </li>
                 </ul>
                 <div className="content-container">
-                    {Posts?.map((post)=>{
-                        return <Post PostInfo={post}/>
+                    {Posts?.map((post, index)=>{
+                        return <Post PostInfo={post} key={index}/>
                     })}
                 </div>
                 <button className="create" onClick={()=>{setToggleState(true)}}>

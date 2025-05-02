@@ -54,6 +54,12 @@
     flex: 1;
 }
 
+#explore-page .actions li img{
+    --img-size: 25px;
+    width: var(--img-size);
+    height: var(--img-size);
+}
+
 #explore-page .actions .filters{
     display: none;
     padding: 5px 20px;

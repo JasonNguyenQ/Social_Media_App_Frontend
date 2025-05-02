@@ -47,6 +47,7 @@ export async function addMessage(variables : { threadId: string, message: string
 
 export async function getMessages(threadId: string | undefined): Promise<MessageInfo[]>{
     try{
+        if(threadId == "" || threadId === undefined) return Promise.resolve([])
         const token = sessionStorage.getItem(ACCESS_KEY)
         const response = await fetch(`${BASE_URL}/api/messages/${threadId}`, {
             method: 'GET',

@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { MessageInfo, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
@@ -16,7 +16,6 @@ import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 
 export default function Messages() {
-	// const socket = useMemo<Socket>(() => io(BASE_URL), []);
 	const token = sessionStorage.getItem(ACCESS_KEY);
 	const [activeThread, setActiveThread] = useState<string>("");
 	const messageContainer = useRef<HTMLDivElement>(null);
