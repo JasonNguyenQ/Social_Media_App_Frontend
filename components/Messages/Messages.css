@@ -192,7 +192,7 @@
 	background-color: var(--neutral-clr-900);
 	border-radius: var(--reaction-img-size);
 	height: var(--reaction-img-size);
-	padding: 5px;
+	padding: 5px 10px;
 	overflow: hidden;
 	z-index: 1;
 	box-sizing: content-box;
@@ -206,7 +206,7 @@
 }
 
 #reaction-menu img:not(:first-child){
-	margin-left: 2px;
+	margin-left: 4px;
 }
 
 #reaction-menu img:hover{

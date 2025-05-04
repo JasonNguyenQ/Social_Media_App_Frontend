@@ -116,7 +116,7 @@ export default function Messages() {
 			);
 		}
 		return (
-			<div key={index} className="message" data-messageId={message.messageId}>
+			<div key={index} className="message" data-messageid={message.messageId}>
 				<p className="message-header">
 					{message.from} | {date}
 				</p>
@@ -177,7 +177,7 @@ export default function Messages() {
 				const message = p.parentElement
 				const bar = reactionBar.current
 				if(bar && !message?.classList.contains("self-message")){
-					setActiveMessage(Number(message?.getAttribute("data-messageId")))
+					setActiveMessage(Number(message?.getAttribute("data-messageid")))
 					message?.appendChild(reactionBar.current)
 					bar.style.display = "flex"
 				}
