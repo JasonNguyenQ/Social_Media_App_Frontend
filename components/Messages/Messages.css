@@ -5,6 +5,7 @@
 	--message-roundness: 15px;
 	--message-input-height: 30px;
 	--message-container-padding: 20px;
+	--reaction-img-size: 20px;
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
@@ -52,6 +53,7 @@
 }
 
 #messages-page .message {
+	position: relative;
 	margin-bottom: 10px;
 }
 
@@ -177,4 +179,36 @@
 
 #messages-page .thread:hover {
 	background-color: hsl(0deg 0% 87%);
+}
+
+#reaction-menu {
+	cursor: pointer;
+	position: absolute;
+	top: calc(-1 * var(--reaction-img-size) - 10px);
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--neutral-clr-900);
+	border-radius: var(--reaction-img-size);
+	height: var(--reaction-img-size);
+	padding: 5px;
+	overflow: hidden;
+	z-index: 1;
+	box-sizing: content-box;
+}
+
+#reaction-menu img{
+	border-radius: var(--reaction-img-size);
+	width: var(--reaction-img-size);
+	height: var(--reaction-img-size);
+	transition: transform .2s;
+}
+
+#reaction-menu img:not(:first-child){
+	margin-left: 2px;
+}
+
+#reaction-menu img:hover{
+	transform: scale(1.2);
 }

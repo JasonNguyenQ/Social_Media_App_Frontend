@@ -9,19 +9,23 @@ import { io, Socket } from "socket.io-client";
 import { flushSync } from "react-dom";
 import { useThrottle } from "../../hooks/useThrottle";
 import { getThreads, getMessages, addMessage } from "../../api/messages";
+import { CreateReaction } from "../../api/reactions";
 import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
+import Like_Icon from "/like_icon.svg"
+import Favorite_Icon from "/favorite_icon.svg"
 
 export default function Messages() {
 	const token = sessionStorage.getItem(ACCESS_KEY);
 	const [activeThread, setActiveThread] = useState<string>("");
+	const [activeMessage, setActiveMessage] = useState<number>(-1);
 	const messageContainer = useRef<HTMLDivElement>(null);
 	const textInput = useRef<HTMLInputElement>(null);
+	const reactionBar = useRef<HTMLDivElement>(null);
 	const [viewOlder, setViewOlder] = useThrottle<boolean>(false, 100);
-
 	const queryClient = useQueryClient()
 	const userIdentifier : UserIdentifier | undefined = queryClient.getQueryData(["auth", { token }])
 
@@ -112,7 +116,7 @@ export default function Messages() {
 			);
 		}
 		return (
-			<div key={index} className="message">
+			<div key={index} className="message" data-messageId={message.messageId}>
 				<p className="message-header">
 					{message.from} | {date}
 				</p>
@@ -136,6 +140,10 @@ export default function Messages() {
 		element.scrollTo(0, scrollHeight);
 	}
 
+	async function ReactionHandler(reaction: string){
+		CreateReaction({type: "message", id: activeMessage, reaction: reaction})
+	}
+
 	function listener(response: MessageInfo) {
 		const message: MessageInfo = {
 			from: response.from,
@@ -149,7 +157,41 @@ export default function Messages() {
 	useEffect(() => {
 		const activeThread = sessionStorage.getItem("activeThread")
 		if(activeThread) setActiveThread(activeThread)
+		function handleReactionBar(){
+			const bar = reactionBar.current
+			if(bar) bar.style.display = "none"
+		}	
+		document.addEventListener("click", handleReactionBar)
+
+		return ()=>{
+			document.removeEventListener("click", handleReactionBar)
+		}
 	}, []);
+
+	useEffect(()=>{
+		const messages = document.querySelectorAll(".message-content")
+		const listeners = new Array(messages.length)
+		document.querySelectorAll(".message-content").forEach((p, index)=>{
+			function ReactionMenu(e: Event){
+				e.preventDefault()
+				const message = p.parentElement
+				const bar = reactionBar.current
+				if(bar && !message?.classList.contains("self-message")){
+					setActiveMessage(Number(message?.getAttribute("data-messageId")))
+					message?.appendChild(reactionBar.current)
+					bar.style.display = "flex"
+				}
+			}
+			listeners[index] = ReactionMenu
+			p.addEventListener("contextmenu", ReactionMenu)
+		})
+
+		return ()=>{
+			document.querySelectorAll(".message-content").forEach((p, index)=>{
+				p.removeEventListener("contextmenu", listeners[index])
+			})
+		}
+	})
 
 	useEffect(() => {
 		sessionStorage.setItem("activeThread", activeThread)
@@ -173,6 +215,10 @@ export default function Messages() {
 				<meta name="description" content="Your Private Messages" />
 			</Helmet>
 			<Navbar />
+			<div id="reaction-menu" ref={reactionBar} style={{display: "none"}}>
+				<img src={Like_Icon} onClick={()=>{ReactionHandler("Like")}}></img>
+				<img src={Favorite_Icon} onClick={()=>{ReactionHandler("Love")}}></img>
+			</div>
 			<div className="container">
 				<div className="threads-container">
 					{threads?.map((thread: ThreadInfo) => {

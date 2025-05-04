@@ -61,11 +61,13 @@ export async function getMessages(threadId: string | undefined): Promise<Message
             username: string,
             message: string
             createdAt: Date,
+            messageId: number,
         }
 
         
         const messages: message[] = await response.json()
         const returned = messages.map((message)=>({
+            messageId: message.messageId,
             from: message.username, 
             message: message.message, 
             timeStamp: Date.parse(message.createdAt.toString())
