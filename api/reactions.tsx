@@ -1,4 +1,5 @@
 import { BASE_URL, ACCESS_KEY } from '../constants/globals' 
+import { MessageReactions } from '../constants/types'
 
 export async function GetReaction(variables : { type: string, id: number }): Promise<string[]>{
     try{
@@ -45,6 +46,29 @@ export async function CountReaction({type, id, reaction}: {
     catch(err){
         console.log(err)
         return Promise.resolve(0)
+    }
+}
+
+export async function GetThreadReactionCounts(threadId: string | undefined): Promise<MessageReactions>{
+    try{
+        if(threadId == "" || threadId === undefined) return Promise.resolve({})
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        const response = await fetch(`${BASE_URL}/api/reactions/threads/${threadId}`,
+            {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        const messageReactions: MessageReactions = await response.json()
+
+        return Promise.resolve(messageReactions)
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve({})
     }
 }
 

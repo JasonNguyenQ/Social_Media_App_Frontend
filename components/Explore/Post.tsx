@@ -5,6 +5,7 @@ import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import Comment_Icon from "/comment_icon.svg"
 import Like_Icon from "/like_icon.svg"
+import Filled_Like_Icon from "/filled_like_icon.svg"
 import Up_Icon from "/up_icon.svg"
 import Down_Icon from "/down_icon.svg"
 import "./Post.css"
@@ -147,7 +148,7 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
             </div>
             <div className="post-actions">
                 <div className="post-action" onClick={()=>{handleReaction("Like")}}>
-                    <img src={Like_Icon} alt="like"/>
+                    <img src={Reactions?.includes("Like") ? Filled_Like_Icon : Like_Icon} alt="like"/>
                     <span>{NumericalAbbr(nLikes)} • {Reactions?.includes("Like") ? "Unlike" : "Like"}</span>
                 </div>
                 <div className="post-action" onClick={fetchComments}>

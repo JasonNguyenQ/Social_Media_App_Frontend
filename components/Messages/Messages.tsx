@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { useEffect, useRef, useState } from "react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { MessageInfo, ThreadInfo } from "../../constants/types";
+import { MessageInfo, MessageReaction, MessageReactions, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
 import Navbar from "../Navbar/Navbar";
 import { APP_NAME } from "../../constants/globals";
@@ -9,14 +9,20 @@ import { io, Socket } from "socket.io-client";
 import { flushSync } from "react-dom";
 import { useThrottle } from "../../hooks/useThrottle";
 import { getThreads, getMessages, addMessage } from "../../api/messages";
-import { CreateReaction } from "../../api/reactions";
+import { CreateReaction, GetThreadReactionCounts } from "../../api/reactions";
 import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
 import Like_Icon from "/like_icon.svg"
-import Favorite_Icon from "/favorite_icon.svg"
+import Filled_Love_Icon from "/filled_love_icon.svg"
+import Filled_Like_Icon from "/filled_like_icon.svg"
+
+const iconMap = {
+	Like: Filled_Like_Icon,
+	Love: Filled_Love_Icon
+}
 
 export default function Messages() {
 	const token = sessionStorage.getItem(ACCESS_KEY);
@@ -33,11 +39,13 @@ export default function Messages() {
 
 	const [
 		{ data: threads },
+		{ data: nThreadReactions },
 		{ data: messages },
 		{ data: socket },
 	] :
 	[
 		{ data: ThreadInfo[] },
+		{ data: MessageReactions },
 		{ data: MessageInfo[] },
 		{ data: Socket },
 	] = useQueries({
@@ -45,6 +53,10 @@ export default function Messages() {
 			{
 				queryKey: ["threads"],
 				queryFn: async () => await getThreads(),
+			},
+			{
+				queryKey: ["nThreadReactions", {activeThread}],
+				queryFn: async () => await GetThreadReactionCounts(activeThread),
 			},
 			{
 				queryKey: ["messages", {activeThread}],
@@ -104,23 +116,26 @@ export default function Messages() {
 
 	function CreateMessage(index: number, message: MessageInfo) {
 		const date = new Date(message.timeStamp).toDateString();
+		const reactions : MessageReaction = nThreadReactions?.[message.messageId!] || {}
 
-		if (message.from === username) {
-			return (
-				<div key={index} className="message self-message">
-					<p className="message-header">
-						You | {date}
-					</p>
-					<p className="message-content">{message.message}</p>
-				</div>
-			);
-		}
 		return (
-			<div key={index} className="message" data-messageid={message.messageId}>
+			<div key={index} className={`message ${message.from === username && "self-message"}`} data-messageid={message.messageId}>
 				<p className="message-header">
-					{message.from} | {date}
+					{(message.from === username) ? "You" : message.from} | {date}
 				</p>
-				<p className="message-content">{message.message}</p>
+				<p className="message-content">
+					{message.message}
+					<div className="message-reactions">
+						{Object.entries(reactions).map(([reaction, count], index)=>{
+							const key = reaction as keyof typeof iconMap;
+							return (
+								<img src={iconMap[key]}
+									key={index}
+								/>
+							)
+						})}
+					</div>
+				</p>
 			</div>
 		);
 	}
@@ -217,7 +232,7 @@ export default function Messages() {
 			<Navbar />
 			<div id="reaction-menu" ref={reactionBar} style={{display: "none"}}>
 				<img src={Like_Icon} onClick={()=>{ReactionHandler("Like")}}></img>
-				<img src={Favorite_Icon} onClick={()=>{ReactionHandler("Love")}}></img>
+				<img src={Filled_Love_Icon} onClick={()=>{ReactionHandler("Love")}}></img>
 			</div>
 			<div className="container">
 				<div className="threads-container">
