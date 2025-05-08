@@ -15,9 +15,11 @@ import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
+import Love_Icon from "/love_icon.svg"
 import Like_Icon from "/like_icon.svg"
 import Filled_Love_Icon from "/filled_love_icon.svg"
 import Filled_Like_Icon from "/filled_like_icon.svg"
+import { NumericalAbbr } from "../../utilities/Abbreviation";
 
 const iconMap = {
 	Like: Filled_Like_Icon,
@@ -123,19 +125,29 @@ export default function Messages() {
 				<p className="message-header">
 					{(message.from === username) ? "You" : message.from} | {date}
 				</p>
-				<p className="message-content">
+				<div className="message-content">
 					{message.message}
 					<div className="message-reactions">
-						{Object.entries(reactions).map(([reaction, count], index)=>{
+						{Object.entries(reactions).map(([reaction,count], index)=>{
 							const key = reaction as keyof typeof iconMap;
+							const countAbbr = NumericalAbbr(count)
 							return (
-								<img src={iconMap[key]}
+								<span 
+									className="message-reaction"
+									data-count={countAbbr}
 									key={index}
-								/>
+									style={{
+										"--position": `${index}`,
+										"--amount": `${Object.keys(reactions).length}`,
+										"--width": `${countAbbr.length + 1}ch`
+									} as React.CSSProperties}
+									>
+									<img src={iconMap[key]}/>
+								</span>
 							)
 						})}
 					</div>
-				</p>
+				</div>
 			</div>
 		);
 	}
@@ -232,7 +244,7 @@ export default function Messages() {
 			<Navbar />
 			<div id="reaction-menu" ref={reactionBar} style={{display: "none"}}>
 				<img src={Like_Icon} onClick={()=>{ReactionHandler("Like")}}></img>
-				<img src={Filled_Love_Icon} onClick={()=>{ReactionHandler("Love")}}></img>
+				<img src={Love_Icon} onClick={()=>{ReactionHandler("Love")}}></img>
 			</div>
 			<div className="container">
 				<div className="threads-container">
