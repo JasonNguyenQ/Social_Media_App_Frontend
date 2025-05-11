@@ -22,12 +22,13 @@ export type MessageInfo = {
 	timeStamp: number;
 };
 
-type Reactions = "Like" | "Love"
+export type Reactions = "Like" | "Love"
 
 export type MessageReaction = {
 	[key in Reactions]?: number
 }
-export type MessageReactions = Record<number, MessageReaction>
+export type MessageReactionCounts = Record<number, MessageReaction>
+export type MessageReactions = Record<number, Array<Reactions>>
 
 export type ThreadInfo = {
 	threadId: string;

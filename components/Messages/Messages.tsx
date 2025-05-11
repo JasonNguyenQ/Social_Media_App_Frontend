@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { useEffect, useRef, useState } from "react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { MessageInfo, MessageReaction, MessageReactions, ThreadInfo } from "../../constants/types";
+import { MessageInfo, MessageReaction, MessageReactionCounts, MessageReactions, Reactions, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
 import Navbar from "../Navbar/Navbar";
 import { APP_NAME } from "../../constants/globals";
@@ -9,7 +9,7 @@ import { io, Socket } from "socket.io-client";
 import { flushSync } from "react-dom";
 import { useThrottle } from "../../hooks/useThrottle";
 import { getThreads, getMessages, addMessage } from "../../api/messages";
-import { CreateReaction, GetThreadReactionCounts } from "../../api/reactions";
+import { CreateReaction, DeleteReaction, GetThreadReactionCounts, GetThreadReactions } from "../../api/reactions";
 import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
@@ -42,11 +42,13 @@ export default function Messages() {
 	const [
 		{ data: threads },
 		{ data: nThreadReactions },
+		{ data: threadReactions },
 		{ data: messages },
 		{ data: socket },
 	] :
 	[
 		{ data: ThreadInfo[] },
+		{ data: MessageReactionCounts },
 		{ data: MessageReactions },
 		{ data: MessageInfo[] },
 		{ data: Socket },
@@ -59,6 +61,10 @@ export default function Messages() {
 			{
 				queryKey: ["nThreadReactions", {activeThread}],
 				queryFn: async () => await GetThreadReactionCounts(activeThread),
+			},
+			{
+				queryKey: ["ThreadReactions", {activeThread}],
+				queryFn: async () => await GetThreadReactions(activeThread),
 			},
 			{
 				queryKey: ["messages", {activeThread}],
@@ -138,7 +144,7 @@ export default function Messages() {
 									key={index}
 									style={{
 										"--position": `${index}`,
-										"--amount": `${Object.keys(reactions).length}`,
+										"--amount": `${Object.values(reactions).length}`,
 										"--width": `${countAbbr.length + 1}ch`
 									} as React.CSSProperties}
 									>
@@ -167,8 +173,46 @@ export default function Messages() {
 		element.scrollTo(0, scrollHeight);
 	}
 
-	async function ReactionHandler(reaction: string){
-		CreateReaction({type: "message", id: activeMessage, reaction: reaction})
+	async function ReactionHandler(messageId: number, reaction: Reactions){
+		if(threadReactions?.[messageId]?.includes(reaction)){
+			DeleteReaction({type: "message", id: activeMessage, reaction: reaction})
+			const updatedThreadReactions = {...threadReactions, [messageId]: threadReactions?.[messageId].filter((r)=>{
+				return r !== reaction
+			})}
+			queryClient.setQueryData(["ThreadReactions", {activeThread}], 
+				updatedThreadReactions
+			)
+
+			const updatedNThreadReactions = 
+			{
+				...nThreadReactions, 
+				[messageId]: {
+					...nThreadReactions?.[messageId], 
+					[reaction]: (nThreadReactions?.[messageId]?.[reaction] || 1) - 1
+				}
+			}
+			if(updatedNThreadReactions?.[messageId]?.[reaction] === 0) 
+				delete updatedNThreadReactions?.[messageId]?.[reaction]
+			queryClient.setQueryData(["nThreadReactions", {activeThread}], updatedNThreadReactions)
+		}
+		else{
+			CreateReaction({type: "message", id: activeMessage, reaction: reaction})
+			const updatedThreadReactions = 
+			{...threadReactions, [messageId]: [...(threadReactions?.[messageId] || []), reaction]}
+			queryClient.setQueryData(["ThreadReactions", {activeThread}], 
+				updatedThreadReactions
+			)
+
+			const updatedNThreadReactions = 
+			{
+				...nThreadReactions, 
+				[messageId]: {
+					...nThreadReactions?.[messageId], 
+					[reaction]: (nThreadReactions?.[messageId]?.[reaction] || 0) + 1
+				}
+			}
+			queryClient.setQueryData(["nThreadReactions", {activeThread}], updatedNThreadReactions)
+		}
 	}
 
 	function listener(response: MessageInfo) {
@@ -243,8 +287,20 @@ export default function Messages() {
 			</Helmet>
 			<Navbar />
 			<div id="reaction-menu" ref={reactionBar} style={{display: "none"}}>
-				<img src={Like_Icon} onClick={()=>{ReactionHandler("Like")}}></img>
-				<img src={Love_Icon} onClick={()=>{ReactionHandler("Love")}}></img>
+				<img 
+					src={
+						(threadReactions?.[activeMessage]?.includes("Like")) ? 
+						Filled_Like_Icon : Like_Icon
+					} 
+					onClick={()=>{ReactionHandler(activeMessage, "Like")}}
+				/>
+				<img 
+					src={
+						(threadReactions?.[activeMessage]?.includes("Love")) ? 
+						Filled_Love_Icon : Love_Icon
+					} 
+					onClick={()=>{ReactionHandler(activeMessage, "Love")}}
+				/>
 			</div>
 			<div className="container">
 				<div className="threads-container">

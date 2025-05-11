@@ -1,5 +1,5 @@
 import { BASE_URL, ACCESS_KEY } from '../constants/globals' 
-import { MessageReactions } from '../constants/types'
+import { MessageReactionCounts, MessageReactions } from '../constants/types'
 
 export async function GetReaction(variables : { type: string, id: number }): Promise<string[]>{
     try{
@@ -49,7 +49,30 @@ export async function CountReaction({type, id, reaction}: {
     }
 }
 
-export async function GetThreadReactionCounts(threadId: string | undefined): Promise<MessageReactions>{
+export async function GetThreadReactions(threadId: string | undefined): Promise<MessageReactions>{
+    try{
+        if(threadId == "" || threadId === undefined) return Promise.resolve({})
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        const response = await fetch(`${BASE_URL}/api/reactions/self/threads/${threadId}`,
+            {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        const messageReactions: MessageReactions = await response.json()
+
+        return Promise.resolve(messageReactions)
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve({})
+    }
+}
+
+export async function GetThreadReactionCounts(threadId: string | undefined): Promise<MessageReactionCounts>{
     try{
         if(threadId == "" || threadId === undefined) return Promise.resolve({})
         const token = sessionStorage.getItem(ACCESS_KEY)
@@ -62,7 +85,7 @@ export async function GetThreadReactionCounts(threadId: string | undefined): Pro
                 "Authorization": `Bearer ${token}`
             }
         })
-        const messageReactions: MessageReactions = await response.json()
+        const messageReactions: MessageReactionCounts = await response.json()
 
         return Promise.resolve(messageReactions)
     }
