@@ -42,6 +42,9 @@ export default function Login() {
 				queryClient.invalidateQueries({
 					queryKey: ["messages"],
 				})
+				queryClient.invalidateQueries({
+					queryKey: ["friendStatus"],
+				})
 				sessionStorage.removeItem("activeThread")
 				sessionStorage.setItem("access_token", data["access_token"]);
 				navigate(path);

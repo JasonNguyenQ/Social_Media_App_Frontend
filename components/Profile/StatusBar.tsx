@@ -10,9 +10,6 @@ export default function StatusBar(){
     const { data: state } = useQuery({
         queryKey: ["friendStatus", {userid}],
         queryFn: ()=>getFriendStatus(Number(userid)),
-        initialData: {
-            state: ""
-        }
     })
 
     const Invalidate = ()=>{
@@ -49,7 +46,7 @@ export default function StatusBar(){
     })
 
     return (
-        <div hidden={status[state]?.label === "You" || status[state]?.label === "Unknown"}>
+        <div hidden={!(state in status ) || status[state]?.label === "You" || status[state]?.label === "Unknown"}>
             <button className="friend-status" onClick={() => status[state]?.fn()}>{status[state]?.label}</button>
         </div>
     );
