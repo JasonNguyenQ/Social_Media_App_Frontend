@@ -25,10 +25,10 @@ export default function Navbar() {
 	}
 
 	useEffect(() => {
-		document.body.addEventListener("click", handleFocus);
+		document.body.addEventListener("mousedown", handleFocus);
 
 		return () => {
-			document.body.removeEventListener("click", handleFocus);
+			document.body.removeEventListener("mousedown", handleFocus);
 		};
 	}, []);
 
