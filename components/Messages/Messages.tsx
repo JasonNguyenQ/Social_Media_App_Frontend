@@ -71,8 +71,8 @@ export default function Messages() {
 				queryFn: async () => await getMessages(activeThread),
 			},
 			{
-				queryKey: ["socket"],
-				queryFn: ()=>io(BASE_URL),
+				queryKey: ["socket", {token}],
+				queryFn: ()=>io(BASE_URL, {query: `token=${token}` as any}),
 				staleTime: Infinity
 			}
 		]
@@ -111,11 +111,12 @@ export default function Messages() {
 		const value = textInput.current!.value;
 		if (value === "") return;
 		await addMessage({ threadId: activeThread, message: value });
-		socket.emit("send", { token: token, thread: activeThread, message: value });
+		socket.emit("send", { message: value });
 		const message: MessageInfo = {
 			from: username,
 			message: value,
 			timeStamp: Date.now(),
+			threadId: activeThread
 		};
 
 		textInput.current!.value = "";
@@ -160,7 +161,6 @@ export default function Messages() {
 
 	async function ThreadHandler(thread: ThreadInfo) {
 		socket.emit("join", thread.threadId);
-		socket.emit("leave", activeThread);
 
 		flushSync(() => {
 			setActiveThread(thread.threadId);
@@ -219,15 +219,18 @@ export default function Messages() {
 		const message: MessageInfo = {
 			from: response.from,
 			message: response.message,
-			timeStamp: response.timeStamp,
+			timeStamp: response.timeStamp
 		};
 
-		queryClient.setQueryData(["messages", {activeThread}], (prev: MessageInfo[])=> [...prev, message])
+		queryClient.setQueryData(["messages", {activeThread: response.threadId}], (prev: MessageInfo[])=> [...(prev||[]), message])
 	}
 
 	useEffect(() => {
 		const activeThread = sessionStorage.getItem("activeThread")
-		if(activeThread) setActiveThread(activeThread)
+		if(activeThread){
+			socket.emit("join", activeThread);
+			setActiveThread(activeThread)
+		}
 		function handleReactionBar(){
 			const bar = reactionBar.current
 			if(bar) bar.style.display = "none"

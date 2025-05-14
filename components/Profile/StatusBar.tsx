@@ -14,7 +14,7 @@ export default function StatusBar(){
 
     const Invalidate = ()=>{
         queryClient.invalidateQueries({
-            queryKey: ["friendStatus"]
+            queryKey: ["friendStatus", {userid}]
         })
     }
 

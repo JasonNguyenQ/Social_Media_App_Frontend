@@ -17,6 +17,7 @@ export type ProfileProps = {
 
 export type MessageInfo = {
 	messageId?: number;
+	threadId?: string;
 	from: string;
 	message: string;
 	timeStamp: number;

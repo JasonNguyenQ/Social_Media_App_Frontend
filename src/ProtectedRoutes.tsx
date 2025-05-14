@@ -1,8 +1,9 @@
 import { Outlet, Navigate, useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import Authorize from '../api/Auth'
-import { ACCESS_KEY, AUTH_VALIDATION_TIME } from '../constants/globals'
+import { BASE_URL, ACCESS_KEY, AUTH_VALIDATION_TIME } from '../constants/globals'
 import { UserIdentifier } from '../constants/types'
+import { io, Socket } from "socket.io-client";
 
 export default function ProtectedRoutes(){
     const location = useLocation()
@@ -14,7 +15,13 @@ export default function ProtectedRoutes(){
         refetchInterval: AUTH_VALIDATION_TIME,
         staleTime: AUTH_VALIDATION_TIME,
     })
-
+    
+    useQuery<Socket>({
+        queryKey: ["socket", {token}],
+        queryFn: ()=>io(BASE_URL, {query: `token=${token}` as any}),
+        staleTime: Infinity
+    })
+    
     if(isLoading){
         return <div>LOADING</div>
     }
