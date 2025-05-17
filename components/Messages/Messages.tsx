@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { useEffect, useRef, useState } from "react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { MessageInfo, MessageReaction, MessageReactionCounts, MessageReactions, Reactions, ThreadInfo } from "../../constants/types";
+import { ContentReaction, MessageInfo, MessageReaction, MessageReactionCounts, MessageReactions, Reactions, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
 import Navbar from "../Navbar/Navbar";
 import { APP_NAME } from "../../constants/globals";
@@ -194,6 +194,13 @@ export default function Messages() {
 			if(updatedNThreadReactions?.[messageId]?.[reaction] === 0) 
 				delete updatedNThreadReactions?.[messageId]?.[reaction]
 			queryClient.setQueryData(["nThreadReactions", {activeThread}], updatedNThreadReactions)
+			socket.emit("reactionInbound", {
+				threadId: activeThread,
+				contentType: "message",
+				contentId: messageId,
+				reaction: reaction,
+				method: "DELETE"
+			})
 		}
 		else{
 			CreateReaction({type: "message", id: activeMessage, reaction: reaction})
@@ -212,10 +219,17 @@ export default function Messages() {
 				}
 			}
 			queryClient.setQueryData(["nThreadReactions", {activeThread}], updatedNThreadReactions)
+			socket.emit("reactionInbound", {
+				threadId: activeThread,
+				contentType: "message",
+				contentId: messageId,
+				reaction: reaction,
+				method: "POST"
+			})
 		}
 	}
 
-	function listener(response: MessageInfo) {
+	function MessageListener(response: MessageInfo) {
 		const message: MessageInfo = {
 			from: response.from,
 			message: response.message,
@@ -224,6 +238,40 @@ export default function Messages() {
 
 		queryClient.setQueryData(["messages", {activeThread: response.threadId}], (prev: MessageInfo[])=> [...(prev||[]), message])
 	}
+
+	function ReactionListener(response: ContentReaction & {threadId: string; method: "POST" | "DELETE"}) {
+		if (response.contentType !== "message") return
+		const methodMap = {"POST": 1, "DELETE": -1}
+
+		queryClient.setQueryData(["nThreadReactions", {activeThread: response.threadId}], (prev: MessageReactionCounts)=>{
+			const previous = prev || []
+			const contentReactions = previous[response.contentId] || {}
+			const reactionCountOld = contentReactions[response.reaction] || 0
+			const reactionCountNew = reactionCountOld+(methodMap[response.method] || 0)
+
+			const updatedNThreadReactions = {
+				...previous, 
+				[response.contentId]: {
+					...contentReactions,
+					[response.reaction]: reactionCountNew
+				}
+			}
+
+			if(reactionCountNew === 0) 
+				delete updatedNThreadReactions[response.contentId][response.reaction]
+			return updatedNThreadReactions
+		})
+	}
+
+	useEffect(()=>{
+		socket.on("receive", MessageListener);
+		socket.on("reactionOutbound", ReactionListener);
+
+		return ()=>{
+			socket.off("receive", MessageListener);
+			socket.off("reactionOutbound", ReactionListener);
+		}
+	}, [socket])
 
 	useEffect(() => {
 		const activeThread = sessionStorage.getItem("activeThread")
@@ -234,7 +282,7 @@ export default function Messages() {
 		function handleReactionBar(){
 			const bar = reactionBar.current
 			if(bar) bar.style.display = "none"
-		}	
+		}
 		document.addEventListener("click", handleReactionBar)
 
 		return ()=>{
@@ -269,11 +317,10 @@ export default function Messages() {
 
 	useEffect(() => {
 		sessionStorage.setItem("activeThread", activeThread)
-		socket?.on("receive", listener);
+		
 		textInput.current!.addEventListener("keypress", EnterMessage);
 
 		return () => {
-			socket?.off("receive", listener);
 			textInput.current?.removeEventListener("keypress", EnterMessage);
 		};
 	}, [viewOlder, activeThread]);
