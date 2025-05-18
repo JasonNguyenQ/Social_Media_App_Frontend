@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { ContentReaction, MessageInfo, MessageReaction, MessageReactionCounts, MessageReactions, Reactions, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
@@ -149,7 +149,7 @@ export default function Messages() {
 										"--width": `${countAbbr.length + 1}ch`
 									} as React.CSSProperties}
 									>
-									<img src={iconMap[key]}/>
+									<img src={iconMap[key]} alt={key}/>
 								</span>
 							)
 						})}
@@ -246,7 +246,7 @@ export default function Messages() {
 		queryClient.setQueryData(["nThreadReactions", {activeThread: response.threadId}], (prev: MessageReactionCounts)=>{
 			const previous = prev || []
 			const contentReactions = previous[response.contentId] || {}
-			const reactionCountOld = contentReactions[response.reaction] || 0
+			const reactionCountOld = contentReactions[response.reaction as Reactions] || 0
 			const reactionCountNew = reactionCountOld+(methodMap[response.method] || 0)
 
 			const updatedNThreadReactions = {
@@ -258,7 +258,7 @@ export default function Messages() {
 			}
 
 			if(reactionCountNew === 0) 
-				delete updatedNThreadReactions[response.contentId][response.reaction]
+				delete updatedNThreadReactions[response.contentId][response.reaction as Reactions]
 			return updatedNThreadReactions
 		})
 	}
@@ -342,6 +342,7 @@ export default function Messages() {
 						(threadReactions?.[activeMessage]?.includes("Like")) ? 
 						Filled_Like_Icon : Like_Icon
 					} 
+					alt="Like"
 					onClick={()=>{ReactionHandler(activeMessage, "Like")}}
 				/>
 				<img 
@@ -349,6 +350,7 @@ export default function Messages() {
 						(threadReactions?.[activeMessage]?.includes("Love")) ? 
 						Filled_Love_Icon : Love_Icon
 					} 
+					alt="Love"
 					onClick={()=>{ReactionHandler(activeMessage, "Love")}}
 				/>
 			</div>
