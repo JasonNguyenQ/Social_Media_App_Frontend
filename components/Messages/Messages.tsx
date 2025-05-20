@@ -8,18 +8,18 @@ import { APP_NAME } from "../../constants/globals";
 import { io, Socket } from "socket.io-client";
 import { flushSync } from "react-dom";
 import { useThrottle } from "../../hooks/useThrottle";
-import { getThreads, getMessages, addMessage } from "../../api/messages";
+import { getThreads, getMessages, addMessage, deleteMessage } from "../../api/messages";
 import { CreateReaction, DeleteReaction, GetThreadReactionCounts, GetThreadReactions } from "../../api/reactions";
 import { UserIdentifier } from "../../constants/types";
 import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
-import Love_Icon from "/love_icon.svg"
-import Like_Icon from "/like_icon.svg"
 import Filled_Love_Icon from "/filled_love_icon.svg"
 import Filled_Like_Icon from "/filled_like_icon.svg"
 import { NumericalAbbr } from "../../utilities/Abbreviation";
+import ReactionMenu from "./ReactionMenu"
+import ActionMenu from "./ActionMenu"
 
 const iconMap = {
 	Like: Filled_Like_Icon,
@@ -33,6 +33,7 @@ export default function Messages() {
 	const messageContainer = useRef<HTMLDivElement>(null);
 	const textInput = useRef<HTMLInputElement>(null);
 	const reactionBar = useRef<HTMLDivElement>(null);
+	const actionBar = useRef<HTMLDivElement>(null);
 	const [viewOlder, setViewOlder] = useThrottle<boolean>(false, 100);
 	const queryClient = useQueryClient()
 	const userIdentifier : UserIdentifier | undefined = queryClient.getQueryData(["auth", { token }])
@@ -111,7 +112,7 @@ export default function Messages() {
 		const value = textInput.current!.value;
 		if (value === "") return;
 		await addMessage({ threadId: activeThread, message: value });
-		socket.emit("send", { message: value });
+		socket?.emit("send", { message: value });
 		const message: MessageInfo = {
 			from: username,
 			message: value,
@@ -160,7 +161,7 @@ export default function Messages() {
 	}
 
 	async function ThreadHandler(thread: ThreadInfo) {
-		socket.emit("join", thread.threadId);
+		socket?.emit("join", thread.threadId);
 
 		flushSync(() => {
 			setActiveThread(thread.threadId);
@@ -173,10 +174,10 @@ export default function Messages() {
 		element.scrollTo(0, scrollHeight);
 	}
 
-	async function ReactionHandler(messageId: number, reaction: Reactions){
-		if(threadReactions?.[messageId]?.includes(reaction)){
+	async function ReactionHandler(reaction: Reactions){
+		if(threadReactions?.[activeMessage]?.includes(reaction)){
 			DeleteReaction({type: "message", id: activeMessage, reaction: reaction})
-			const updatedThreadReactions = {...threadReactions, [messageId]: threadReactions?.[messageId].filter((r)=>{
+			const updatedThreadReactions = {...threadReactions, [activeMessage]: threadReactions?.[activeMessage].filter((r)=>{
 				return r !== reaction
 			})}
 			queryClient.setQueryData(["ThreadReactions", {activeThread}], 
@@ -186,18 +187,18 @@ export default function Messages() {
 			const updatedNThreadReactions = 
 			{
 				...nThreadReactions, 
-				[messageId]: {
-					...nThreadReactions?.[messageId], 
-					[reaction]: (nThreadReactions?.[messageId]?.[reaction] || 1) - 1
+				[activeMessage]: {
+					...nThreadReactions?.[activeMessage], 
+					[reaction]: (nThreadReactions?.[activeMessage]?.[reaction] || 1) - 1
 				}
 			}
-			if(updatedNThreadReactions?.[messageId]?.[reaction] === 0) 
-				delete updatedNThreadReactions?.[messageId]?.[reaction]
+			if(updatedNThreadReactions?.[activeMessage]?.[reaction] === 0) 
+				delete updatedNThreadReactions?.[activeMessage]?.[reaction]
 			queryClient.setQueryData(["nThreadReactions", {activeThread}], updatedNThreadReactions)
-			socket.emit("reactionInbound", {
+			socket?.emit("reactionInbound", {
 				threadId: activeThread,
 				contentType: "message",
-				contentId: messageId,
+				contentId: activeMessage,
 				reaction: reaction,
 				method: "DELETE"
 			})
@@ -205,7 +206,7 @@ export default function Messages() {
 		else{
 			CreateReaction({type: "message", id: activeMessage, reaction: reaction})
 			const updatedThreadReactions = 
-			{...threadReactions, [messageId]: [...(threadReactions?.[messageId] || []), reaction]}
+			{...threadReactions, [activeMessage]: [...(threadReactions?.[activeMessage] || []), reaction]}
 			queryClient.setQueryData(["ThreadReactions", {activeThread}], 
 				updatedThreadReactions
 			)
@@ -213,19 +214,32 @@ export default function Messages() {
 			const updatedNThreadReactions = 
 			{
 				...nThreadReactions, 
-				[messageId]: {
-					...nThreadReactions?.[messageId], 
-					[reaction]: (nThreadReactions?.[messageId]?.[reaction] || 0) + 1
+				[activeMessage]: {
+					...nThreadReactions?.[activeMessage], 
+					[reaction]: (nThreadReactions?.[activeMessage]?.[reaction] || 0) + 1
 				}
 			}
 			queryClient.setQueryData(["nThreadReactions", {activeThread}], updatedNThreadReactions)
-			socket.emit("reactionInbound", {
+			socket?.emit("reactionInbound", {
 				threadId: activeThread,
 				contentType: "message",
-				contentId: messageId,
+				contentId: activeMessage,
 				reaction: reaction,
 				method: "POST"
 			})
+		}
+	}
+
+	async function ActionHandler(action: string){
+		if(action === "Delete"){
+			deleteMessage(activeMessage)
+			queryClient.setQueryData(
+				["messages",{activeThread}],
+				(prev: MessageInfo[])=>{
+					return prev.filter((message)=>message.messageId !== activeMessage)
+				}
+			)
+			if(actionBar.current) actionBar.current.style.display = "none"
 		}
 	}
 
@@ -264,29 +278,29 @@ export default function Messages() {
 	}
 
 	useEffect(()=>{
-		socket.on("receive", MessageListener);
-		socket.on("reactionOutbound", ReactionListener);
+		socket?.on("receive", MessageListener);
+		socket?.on("reactionOutbound", ReactionListener);
 
 		return ()=>{
-			socket.off("receive", MessageListener);
-			socket.off("reactionOutbound", ReactionListener);
+			socket?.off("receive", MessageListener);
+			socket?.off("reactionOutbound", ReactionListener);
 		}
 	}, [socket])
 
 	useEffect(() => {
 		const activeThread = sessionStorage.getItem("activeThread")
 		if(activeThread){
-			socket.emit("join", activeThread);
+			socket?.emit("join", activeThread);
 			setActiveThread(activeThread)
 		}
-		function handleReactionBar(){
-			const bar = reactionBar.current
-			if(bar) bar.style.display = "none"
+		function handleMenus(){
+			if(reactionBar.current) reactionBar.current.style.display = "none"
+			if(actionBar.current) actionBar.current.style.display = "none"
 		}
-		document.addEventListener("click", handleReactionBar)
+		document.addEventListener("click", handleMenus)
 
 		return ()=>{
-			document.removeEventListener("click", handleReactionBar)
+			document.removeEventListener("click", handleMenus)
 		}
 	}, []);
 
@@ -294,18 +308,25 @@ export default function Messages() {
 		const messages = document.querySelectorAll(".message-content")
 		const listeners = new Array(messages.length)
 		document.querySelectorAll(".message-content").forEach((p, index)=>{
-			function ReactionMenu(e: Event){
+			function Menu(e: Event){
 				e.preventDefault()
 				const message = p.parentElement
-				const bar = reactionBar.current
-				if(bar && !message?.classList.contains("self-message")){
-					setActiveMessage(Number(message?.getAttribute("data-messageid")))
+				setActiveMessage(Number(message?.getAttribute("data-messageid")))
+				if(reactionBar.current && !message?.classList.contains("self-message")){
 					message?.appendChild(reactionBar.current)
-					bar.style.display = "flex"
+					reactionBar.current.style.display = "flex"
+					if(actionBar.current) actionBar.current.style.display = "none"
+					return
+				}
+				if(actionBar.current && message?.classList.contains("self-message")){
+					message?.appendChild(actionBar.current)
+					actionBar.current.style.display = "flex"
+					if(reactionBar.current) reactionBar.current.style.display = "none"
+					return
 				}
 			}
-			listeners[index] = ReactionMenu
-			p.addEventListener("contextmenu", ReactionMenu)
+			listeners[index] = Menu
+			p.addEventListener("contextmenu", Menu)
 		})
 
 		return ()=>{
@@ -336,24 +357,16 @@ export default function Messages() {
 				<meta name="description" content="Your Private Messages" />
 			</Helmet>
 			<Navbar />
-			<div id="reaction-menu" ref={reactionBar} style={{display: "none"}}>
-				<img 
-					src={
-						(threadReactions?.[activeMessage]?.includes("Like")) ? 
-						Filled_Like_Icon : Like_Icon
-					} 
-					alt="Like"
-					onClick={()=>{ReactionHandler(activeMessage, "Like")}}
-				/>
-				<img 
-					src={
-						(threadReactions?.[activeMessage]?.includes("Love")) ? 
-						Filled_Love_Icon : Love_Icon
-					} 
-					alt="Love"
-					onClick={()=>{ReactionHandler(activeMessage, "Love")}}
-				/>
-			</div>
+			<ReactionMenu
+				ref={reactionBar}
+				LikeStatus={threadReactions?.[activeMessage]?.includes("Like")}
+				LoveStatus={threadReactions?.[activeMessage]?.includes("Love")}
+				ReactionHandler={ReactionHandler}
+			/>
+			<ActionMenu
+				ref={actionBar}
+				ActionHandler={ActionHandler}
+			/>
 			<div className="container">
 				<div className="threads-container">
 					{threads?.map((thread: ThreadInfo) => {

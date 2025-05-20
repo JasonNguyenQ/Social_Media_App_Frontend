@@ -242,11 +242,10 @@
 	background-color: hsl(0deg 0% 87%);
 }
 
-#reaction-menu {
+#messages-page .menu {
 	cursor: pointer;
 	position: absolute;
 	top: calc(-1 * var(--reaction-img-size) - 10px);
-	left: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -260,13 +259,21 @@
 	box-sizing: content-box;
 }
 
-#reaction-menu img{
+#reaction-menu{
+	left: 0;
+}
+
+#action-menu{
+	right: 0;
+}
+
+#messages-page .menu img{
 	border-radius: var(--reaction-img-size);
 	width: var(--reaction-img-size);
 	height: var(--reaction-img-size);
 	transition: transform .2s;
 }
 
-#reaction-menu img:hover{
+#messages-page .menu img:hover{
 	transform: scale(1.2);
 }

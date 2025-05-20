@@ -45,6 +45,27 @@ export async function addMessage(variables : { threadId: string, message: string
     }
 }
 
+export async function deleteMessage(messageId: number): Promise<string>{
+    try{
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        await fetch(`${BASE_URL}/api/messages/${messageId}`, {
+            method: 'DELETE',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({messageId})
+        })
+        return Promise.resolve("Finished")
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve("Incomplete")
+    }
+}
+
 export async function getMessages(threadId: string | undefined): Promise<MessageInfo[]>{
     try{
         if(threadId == "" || threadId === undefined) return Promise.resolve([])
