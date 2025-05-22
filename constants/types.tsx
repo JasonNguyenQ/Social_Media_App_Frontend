@@ -23,13 +23,15 @@ export type MessageInfo = {
 	timeStamp: number;
 };
 
-export type ContentReaction = {
-	contentType: string;
-	contentId: number;
-	reaction: string;
-}
 
 export type Reactions = "Like" | "Love"
+
+export type ContentIdentifier = {
+	contentType: string;
+	contentId: number;
+}
+
+export type ContentReaction = ContentIdentifier & { reaction: Reactions }
 
 export type MessageReaction = {
 	[key in Reactions]?: number

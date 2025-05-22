@@ -20,15 +20,15 @@ export async function getThreads(): Promise<ThreadInfo[]>{
     }
 }
 
-export async function addMessage(variables : { threadId: string, message: string}): Promise<string>{
+export async function addMessage(variables : { threadId: string, message: string}): Promise<number>{
     try{
         const { threadId } = variables
 
-        if (threadId === "") return Promise.resolve("Incomplete")
+        if (threadId === "") return Promise.resolve(-1)
 
         const token = sessionStorage.getItem(ACCESS_KEY)
 
-        await fetch(`${BASE_URL}/api/messages`, {
+        const response = await fetch(`${BASE_URL}/api/messages`, {
             method: 'POST',
             credentials: "include",
             headers: {
@@ -37,11 +37,12 @@ export async function addMessage(variables : { threadId: string, message: string
             },
             body: JSON.stringify(variables)
         })
-        return Promise.resolve("Finished")
+        const messageId = response.json()
+        return Promise.resolve(messageId)
     }
     catch(err){
         console.log(err)
-        return Promise.resolve("Incomplete")
+        return Promise.resolve(-1)
     }
 }
 

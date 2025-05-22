@@ -1,17 +1,15 @@
 import { Helmet } from "react-helmet-async";
 import React, { useEffect, useRef, useState } from "react";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { ContentReaction, MessageInfo, MessageReaction, MessageReactionCounts, MessageReactions, Reactions, ThreadInfo } from "../../constants/types";
+import { UserIdentifier, ContentIdentifier, ContentReaction, MessageInfo, MessageReaction, MessageReactionCounts, MessageReactions, Reactions, ThreadInfo } from "../../constants/types";
 import "./Messages.css";
 import Navbar from "../Navbar/Navbar";
-import { APP_NAME } from "../../constants/globals";
+import { APP_NAME, BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { io, Socket } from "socket.io-client";
 import { flushSync } from "react-dom";
 import { useThrottle } from "../../hooks/useThrottle";
 import { getThreads, getMessages, addMessage, deleteMessage } from "../../api/messages";
 import { CreateReaction, DeleteReaction, GetThreadReactionCounts, GetThreadReactions } from "../../api/reactions";
-import { UserIdentifier } from "../../constants/types";
-import { BASE_URL, ACCESS_KEY } from "../../constants/globals";
 import { FileBlobToURL } from "../../utilities/URL";
 import Person_Icon from "/person_icon.svg"
 import Send_Icon from "/send_icon.svg"
@@ -111,13 +109,14 @@ export default function Messages() {
 	async function SendMessage() {
 		const value = textInput.current!.value;
 		if (value === "") return;
-		await addMessage({ threadId: activeThread, message: value });
-		socket?.emit("send", { message: value });
+		const messageId = await addMessage({ threadId: activeThread, message: value });
+		socket?.emit("send", { message: value, messageId: messageId });
 		const message: MessageInfo = {
 			from: username,
 			message: value,
 			timeStamp: Date.now(),
-			threadId: activeThread
+			threadId: activeThread,
+			messageId: messageId
 		};
 
 		textInput.current!.value = "";
@@ -240,6 +239,12 @@ export default function Messages() {
 				}
 			)
 			if(actionBar.current) actionBar.current.style.display = "none"
+			socket?.emit("actionInbound", {
+				threadId: activeThread,
+				contentType: "message",
+				contentId: activeMessage,
+				action: "DELETE"
+			})
 		}
 	}
 
@@ -247,7 +252,8 @@ export default function Messages() {
 		const message: MessageInfo = {
 			from: response.from,
 			message: response.message,
-			timeStamp: response.timeStamp
+			timeStamp: response.timeStamp,
+			messageId: response.messageId
 		};
 
 		queryClient.setQueryData(["messages", {activeThread: response.threadId}], (prev: MessageInfo[])=> [...(prev||[]), message])
@@ -277,13 +283,24 @@ export default function Messages() {
 		})
 	}
 
+	function ActionListener(response: ContentIdentifier & {
+		threadId: string; 
+		action: "DELETE"; 
+		from: String})
+	{
+		if (response.contentType !== "message") return
+		
+		queryClient.setQueryData(["messages", {activeThread: response.threadId}], (prev: MessageInfo[])=>prev.filter((message)=>!(message.messageId === response.contentId && response.from === message.from)))
+	}
+
 	useEffect(()=>{
 		socket?.on("receive", MessageListener);
 		socket?.on("reactionOutbound", ReactionListener);
+		socket?.on("actionOutbound", ActionListener);
 
 		return ()=>{
 			socket?.off("receive", MessageListener);
-			socket?.off("reactionOutbound", ReactionListener);
+			socket?.off("actionOutbound", ActionListener);
 		}
 	}, [socket])
 
