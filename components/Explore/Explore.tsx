@@ -101,8 +101,10 @@ export default function Explore(){
                         name="image" 
                         type="file"
                         accept="image/png, image/jpg, image/jpeg"/>
-                    <button type="reset" onClick={()=>{setToggleState(false)}}>Discard</button>
-                    <button type="submit">Post</button>
+                    <footer>
+                        <button type="reset" onClick={()=>{setToggleState(false)}}>Discard</button>
+                        <button type="submit">Post</button>
+                    </footer>
                 </form>
             )}
         </div>

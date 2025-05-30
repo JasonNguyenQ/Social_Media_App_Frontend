@@ -116,7 +116,54 @@
     top: 50%;
     left: 50%;
     padding: 20px;
-    border: 1px solid var(--neutral-clr-500);
     background-color: var(--neutral-clr-900);
+    box-shadow: 0px 0px 5px 0px var(--neutral-clr-500);
+    border-radius: 10px;
     transform: translate(-50%,-50%);
+}
+
+#explore-page .post-form label{
+    margin-bottom: 2px;
+}
+
+#explore-page .post-form input{
+    width: 100%;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 50px;
+	box-sizing: border-box;
+}
+
+#explore-page .post-form footer{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+#explore-page .post-form button{
+    cursor: pointer;
+    border: none;
+    padding: 5px 0px;
+    border-radius: 50px;
+    flex: 1;
+}
+
+#explore-page .post-form footer>[type="reset"]{
+    background-color: var(--neutral-clr-400);
+    color: white
+}
+
+#explore-page .post-form footer>[type="reset"]:hover{
+    background-color: var(--neutral-clr-200);
+}
+
+#explore-page .post-form footer>[type="submit"]{
+    background-color: hsl(240,60%,50%);
+    color: white
+}
+
+#explore-page .post-form footer>[type="submit"]:hover{
+    background-color: hsl(240,60%,30%);
 }
