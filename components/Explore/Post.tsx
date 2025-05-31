@@ -8,6 +8,7 @@ import Like_Icon from "/like_icon.svg"
 import Filled_Like_Icon from "/filled_like_icon.svg"
 import Up_Icon from "/up_icon.svg"
 import Down_Icon from "/down_icon.svg"
+import More_Icon from "/more_icon.svg"
 import "./Post.css"
 import { useRef } from "react";
 import { Link } from "react-router-dom";
@@ -19,7 +20,7 @@ import { NumericalAbbr } from "../../utilities/Abbreviation";
 import { ACCESS_KEY, AUTH_VALIDATION_TIME } from '../../constants/globals'
 import Authorize from "../../api/Auth";
 
-export default function Post( {PostInfo} : {PostInfo: PostProps}){
+export default function Post( {PostInfo, setActive} : {PostInfo: PostProps, setActive: Function}){
     const {
         postId,
         id,
@@ -129,13 +130,23 @@ export default function Post( {PostInfo} : {PostInfo: PostProps}){
     }
     
     return (
-        <div className="post">
-            <span className="date">{date}</span>
+        <div className="post" id={`post-${postId}`}>
+            <div className="metadata">
+                <span className="date">{date}</span>
+                {
+                    userInfo?.id === id && 
+                    <img 
+                        src={More_Icon} 
+                        onClick={()=>setActive(postId)}
+                        alt="More"
+                    />
+                }
+            </div>
             <header>
                 <Link to={`/search/${id}`}>
                     <img src={FileBlobToURL(profilePicture, Person_Icon)} className="profile-picture" alt={`Post titled: ${title} by ${from}`}/>
                 </Link>
-                <div className="metadata">
+                <div className="info">
                     <h2>{title}</h2>
                     <span>@{from}</span>
                 </div>

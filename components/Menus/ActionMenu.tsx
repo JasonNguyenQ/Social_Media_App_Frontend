@@ -1,5 +1,6 @@
 import Filled_Delete_Icon from "/filled_delete_icon.svg"
 import { forwardRef } from "react"
+import "./Menu.css"
 
 const ActionMenu = 
 forwardRef<HTMLDivElement, {ActionHandler: Function}>((

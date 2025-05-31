@@ -3,6 +3,7 @@ import Like_Icon from "/like_icon.svg"
 import Filled_Love_Icon from "/filled_love_icon.svg"
 import Filled_Like_Icon from "/filled_like_icon.svg"
 import { forwardRef } from "react"
+import "./Menu.css"
 
 const ReactionMenu = 
 forwardRef<HTMLDivElement, {LikeStatus: boolean, LoveStatus: boolean, ReactionHandler: Function}>((

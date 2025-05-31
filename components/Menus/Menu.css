@@ -1,0 +1,39 @@
+:root{
+    --reaction-img-size: 1.125rem;
+}
+
+#reaction-menu{
+	left: 0;
+}
+
+#action-menu{
+	right: 0;
+}
+
+.menu {
+	cursor: pointer;
+	position: absolute;
+	top: calc(-1 * var(--reaction-img-size) - 10px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--neutral-clr-900);
+	border-radius: var(--reaction-img-size);
+	height: var(--reaction-img-size);
+	padding: 5px 10px;
+	overflow: hidden;
+	z-index: 1;
+	gap: 5px;
+	box-sizing: content-box;
+}
+
+.menu img{
+	border-radius: var(--reaction-img-size);
+	width: var(--reaction-img-size);
+	height: var(--reaction-img-size);
+	transition: transform .2s;
+}
+
+.menu img:hover{
+	transform: scale(1.2);
+}

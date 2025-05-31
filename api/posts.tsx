@@ -16,6 +16,26 @@ export async function GetPosts(): Promise<PostProps[]>{
     }
 }
 
+export async function DeletePost(id: number): Promise<string>{
+    try{
+        const token = sessionStorage.getItem(ACCESS_KEY)
+
+        await fetch(`${BASE_URL}/api/posts/${id}`, {
+            method: 'DELETE',
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+
+        return Promise.resolve("SUCCESS")
+    }
+    catch(err){
+        console.log(err)
+        return Promise.resolve("INCOMPLETE")
+    }
+}
+
 export async function CreatePost(form : FormData): Promise<string>{
     try{
         const token = sessionStorage.getItem(ACCESS_KEY)

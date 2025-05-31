@@ -76,6 +76,7 @@
 }
 
 #explore-page .content-container{
+    padding-top: 25px;
     display: flex;
     flex-direction: column;
     gap: 50px;

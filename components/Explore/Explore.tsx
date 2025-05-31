@@ -5,14 +5,18 @@ import { APP_NAME } from '../../constants/globals'
 import Right_Arrow_Icon from "/right_arrow_icon.svg"
 import New_Tab_Icon from "/new_tab_icon.svg"
 import Post from './Post.tsx'
-import { GetPosts, CreatePost } from "../../api/posts.tsx"
+import { GetPosts, CreatePost, DeletePost } from "../../api/posts.tsx"
 import "./Explore.css"
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { PostProps } from '../../constants/types.tsx';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import ActionMenu from '../Menus/ActionMenu.tsx';
 
 export default function Explore(){
     const [toggleState, setToggleState] = useState(false);
+    const [activePost, setActivePost] = useState<number>(-1)
+    const actionBar = useRef<HTMLDivElement>(null)
+    const queryClient = useQueryClient()
 
     const { data: Posts } = useQuery<PostProps[]>({
 		queryKey: ["posts"],
@@ -35,6 +39,27 @@ export default function Explore(){
         await CreatePost(data)
         setToggleState(false);
     }
+
+    useEffect(()=>{
+        if(actionBar.current){
+            const post = document.getElementById(`post-${activePost}`)
+            post?.appendChild(actionBar.current)
+            actionBar.current.style.display = "flex"
+        }
+    },[activePost])
+
+    function ActionHandler(action: string){
+        if(action === "Delete"){
+            DeletePost(activePost)
+            queryClient.setQueryData(
+                ["posts"],
+                (prev: PostProps[])=>{
+                    return prev.filter((post)=>post.postId !== activePost)
+                }
+            )
+            if(actionBar.current) actionBar.current.style.display = "none"
+        }
+    }
     
     return (
         <div id="explore-page">
@@ -44,6 +69,10 @@ export default function Explore(){
             </Helmet>
             <Navbar/>
             <div className="explore-container">
+                <ActionMenu
+                    ref={actionBar}
+                    ActionHandler={ActionHandler}
+                />
                 <ul className="actions">
                     <li>
                         Filters
@@ -73,7 +102,7 @@ export default function Explore(){
                 </ul>
                 <div className="content-container">
                     {Posts?.map((post, index)=>{
-                        return <Post PostInfo={post} key={index}/>
+                        return <Post PostInfo={post} key={index} setActive={setActivePost}/>
                     })}
                 </div>
                 <button className="create" onClick={()=>{setToggleState(true)}}>

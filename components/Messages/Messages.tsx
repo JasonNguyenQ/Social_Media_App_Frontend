@@ -16,8 +16,8 @@ import Send_Icon from "/send_icon.svg"
 import Filled_Love_Icon from "/filled_love_icon.svg"
 import Filled_Like_Icon from "/filled_like_icon.svg"
 import { NumericalAbbr } from "../../utilities/Abbreviation";
-import ReactionMenu from "./ReactionMenu"
-import ActionMenu from "./ActionMenu"
+import ReactionMenu from "../Menus/ReactionMenu"
+import ActionMenu from "../Menus/ActionMenu"
 
 const iconMap = {
 	Like: Filled_Like_Icon,
