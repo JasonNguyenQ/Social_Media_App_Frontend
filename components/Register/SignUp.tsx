@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import InputField from "./Fields";
 import { z } from "zod"
 import "./SignUp.css";
+import AppInfo from "./AppInfo";
 
 const userInputSchema = z.object({
 	username: z.
@@ -84,71 +85,77 @@ export default function SignUp() {
 				<title>Register | {APP_NAME}</title>
 				<meta name="description" content="Sign Up to Use More Features" />
 			</Helmet>
-			<form onSubmit={Register} className="form">
-				<h2>Create Account</h2>
-				<fieldset>
-					<legend>Personal Information</legend>
-					<InputField
-						name="firstName"
-						type="text"
-						label="First Name"
-						placeholder="e.g. John"
-						autocomplete="first-name"
-						required
-						issues={issueMessages["firstName"]}
-					/>
-					<InputField
-						name="lastName"
-						type="text"
-						label="Last Name"
-						placeholder="e.g. Doe"
-						autocomplete="family-name"
-						required
-						issues={issueMessages["lastName"]}
-					/>
-				</fieldset>
+			<div className="form-wrapper">
+				<AppInfo/>
+				<form onSubmit={Register} className="form">
+					<h3>Create An Account</h3>
+					<p>
+						Creating an account will allow you to access more features.
+					</p>
+					<div className="fields">
+						<section>
+							<InputField
+								name="firstName"
+								type="text"
+								label="First Name"
+								placeholder="e.g. John"
+								autocomplete="first-name"
+								required
+								issues={issueMessages["firstName"]}
+							/>
+							<InputField
+								name="lastName"
+								type="text"
+								label="Last Name"
+								placeholder="e.g. Doe"
+								autocomplete="family-name"
+								required
+								issues={issueMessages["lastName"]}
+							/>
+						</section>
 
-				<fieldset>
-					<legend>Account Information</legend>
-					<InputField
-						name="username"
-						type="text"
-						label="Username"
-						placeholder="e.g. ChubbyRabbit029"
-						autocomplete="username"
-						required
-						issues={issueMessages["username"]}
-					/>
-					<InputField
-						name="password"
-						type="password"
-						label="Password"
-						placeholder="Enter your password"
-						autocomplete="new-password"
-						required
-						issues={issueMessages["password"]}
-					/>
-					<InputField
-						name="confirmation"
-						type="password"
-						label="Confirm Password"
-						autocomplete="new-password"
-						placeholder="Verify your password"
-						required
-						issues={issueMessages["confirmation"]}
-					/>
-				</fieldset>
-				<p>
-					Note: All information except password <strong>WILL</strong> be public
-				</p>
-				<button type="submit">Sign Up</button>
-				<div className="form-footer">
-					<div className="redirect-form">
-						<span>Already have an account?</span>
-						<Link to="/login">Login</Link>
+						<section>
+							<InputField
+								name="username"
+								type="text"
+								label="Username"
+								placeholder="e.g. ChubbyRabbit029"
+								autocomplete="username"
+								required
+								issues={issueMessages["username"]}
+							/>
+							<InputField
+								name="password"
+								type="password"
+								label="Password"
+								placeholder="Enter your password"
+								autocomplete="new-password"
+								required
+								issues={issueMessages["password"]}
+							/>
+							<InputField
+								name="confirmation"
+								type="password"
+								label="Confirm Password"
+								autocomplete="new-password"
+								placeholder="Verify your password"
+								required
+								issues={issueMessages["confirmation"]}
+							/>
+						</section>
 					</div>
-				</div>
-			</form>
+					<p>
+						Note: All information except password <strong>WILL</strong> be public
+					</p>
+					<button type="submit">Sign Up</button>
+					<div className="form-footer">
+						<div className="redirect-form">
+							<span>Already have an account?</span>
+							<Link to="/login">Login</Link>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 	);
 }

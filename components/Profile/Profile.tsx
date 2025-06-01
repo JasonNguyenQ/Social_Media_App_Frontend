@@ -78,6 +78,8 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 			{toggleState && isSelf && (
 				<dialog className="profile-modal">
 					<form onSubmit={ApplyChanges}>
+						<h2>Edit your profile</h2>
+						<p>Personalize your profile for others to view.</p>
 						<label htmlFor="profile-description">
 							Description
 							<textarea
@@ -88,7 +90,10 @@ export default function Profile({userInfo, isSelf} : {userInfo : ProfileProps, i
 								defaultValue={description}
 							></textarea>
 						</label>
-						<p>{text.length}/2000</p>
+						<span 
+							style={{"color": (text.length > 2000 ? "red" : "black")}}>
+							{text.length}/2000
+						</span>
 						<div className="profile-actions">
 							<label htmlFor="profile-picture" className="profile-file">
 								Change Profile Picture

@@ -5,6 +5,7 @@ import InputField from "./Fields";
 import "./SignUp.css";
 import { FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import AppInfo from "./AppInfo"
 
 export default function Login() {
 	const location = useLocation();
@@ -60,10 +61,11 @@ export default function Login() {
 				<title>Login | {APP_NAME}</title>
 				<meta name="description" content="Log into Your Account" />
 			</Helmet>
-			<form onSubmit={Validate} className="form">
-				<h2>Login</h2>
-				<fieldset>
-					<legend>Account Information</legend>
+			<div className="form-wrapper">
+				<AppInfo/>
+				<form onSubmit={Validate} className="form">
+					<h2>Log Into Your Account</h2>
+					<p>Login to be able to create posts, chat privately, and more.</p>
 					<InputField
 						name="username"
 						type="text"
@@ -80,16 +82,16 @@ export default function Login() {
 						autocomplete="current-password"
 						required
 					/>
-				</fieldset>
-				<button type="submit">Log In</button>
-				<div className="form-footer">
-					<div className="redirect-form">
-						<span>Don't have an account?</span>
-						<Link to="/register">Sign Up</Link>
+					<button type="submit">Log In</button>
+					<div className="form-footer">
+						<div className="redirect-form">
+							<span>Don't have an account?</span>
+							<Link to="/register">Sign Up</Link>
+						</div>
+						<Link to="/">Forgot Password?</Link>
 					</div>
-					<Link to="/">Forgot Password?</Link>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	);
 }

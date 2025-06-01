@@ -99,7 +99,7 @@
     padding-left: 2ch;
     border: none;
     border-radius: calc(var(--size)/2);
-    background-color: hsl(240,60%,50%);
+    background-color: hsl(240,50%,50%);
     color: white;
     overflow: hidden;
     text-wrap-mode: nowrap;
@@ -111,49 +111,61 @@
 }
 
 #explore-page .post-form{
-    display: flex;
-    flex-direction: column;
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
-    padding: 20px;
-    background-color: var(--neutral-clr-900);
-    box-shadow: 0px 0px 5px 0px var(--neutral-clr-500);
+    width: 350px;
+    padding: 10px 25px;
     border-radius: 10px;
+    background-color: var(--neutral-clr-950);
+    box-shadow: 0 0 5px 0 var(--neutral-clr-700);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     transform: translate(-50%,-50%);
 }
 
+#explore-page .post-form h2{
+	font-size: large;
+	margin-bottom: 5px;
+}
+
 #explore-page .post-form label{
-    margin-bottom: 2px;
+    font-size: small;
+	font-weight: 500;
 }
 
 #explore-page .post-form input{
     width: 100%;
 	margin-top: 5px;
 	margin-bottom: 10px;
-	padding: 5px 10px;
+	padding: 10px 20px;
 	border: none;
-	border-radius: 50px;
+	border-radius: 10px;
 	box-sizing: border-box;
+	border: 1px solid var(--neutral-clr-900);
+}
+
+#explore-page .post-form > input:focus {
+	border: 1px solid var(--neutral-clr-400);
+	outline: none;
 }
 
 #explore-page .post-form footer{
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
 }
 
 #explore-page .post-form button{
     cursor: pointer;
-    border: none;
-    padding: 5px 0px;
-    border-radius: 50px;
-    flex: 1;
+	width: 100%;
+	padding: 8px 10px;
+	border-radius: 5px;
+	color: white;
+	border: none;
 }
 
 #explore-page .post-form footer>[type="reset"]{
     background-color: var(--neutral-clr-400);
-    color: white
 }
 
 #explore-page .post-form footer>[type="reset"]:hover{
@@ -161,10 +173,14 @@
 }
 
 #explore-page .post-form footer>[type="submit"]{
-    background-color: hsl(240,60%,50%);
-    color: white
+    background-color: hsl(240deg 50% 50%);
 }
 
 #explore-page .post-form footer>[type="submit"]:hover{
-    background-color: hsl(240,60%,30%);
+    background-color: hsl(240deg ,50%,30%);
 }
+
+#explore-page .post-form p{
+	margin-top: 0;
+	color: var(--neutral-clr-500)
+}	

@@ -2,32 +2,66 @@
 	--left-margin: 2%;
 }
 
+#login-page .form-wrapper,
+#signup-page .form-wrapper {
+	display: flex;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	box-shadow: 0 0 5px 0 var(--neutral-clr-700);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+#login-page .form-wrapper > *,
+#signup-page .form-wrapper > * {
+	width: 350px;
+}
+
+#login-page .form-wrapper > section,
+#signup-page .form-wrapper > section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	background-color: hsl(240deg 50% 50%);
+	text-align: center;
+	padding: 0px 25px;
+}
+
+#login-page .form-wrapper > section > h2,
+#signup-page .form-wrapper > section > h2 {
+	margin: 10px;
+	font-size: xx-large;
+	font-weight: bold;
+}
+
+#login-page .form-wrapper > section > p,
+#signup-page .form-wrapper > section > p {
+	margin: 0;
+	font-size: small;
+}
+
 #login-page .form,
 #signup-page .form {
-	position: absolute;
-	top: 15%;
-	left: 50%;
-	width: 30%;
-	padding: 20px;
-	border-radius: 10px;
-	background-color: hsl(0deg 0% 90%);
-	box-shadow: 0 0 5px 0 hsl(0deg 0% 50%);
+	padding: 10px 25px;
+	background-color: var(--neutral-clr-950);
 	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	transform: translate(-50%,0%);
 }
 
 #login-page .form > h2,
 #signup-page .form > h2 {
-	text-align: center;
+	font-size: large;
+	margin-bottom: 5px;
 }
 
-#login-page .form > fieldset,
-#signup-page .form > fieldset {
-	margin-bottom: 25px;
-	padding: 10px 20px;
-	border: 1px solid black;
-	border-radius: 5px;
-	font-size: large;
+#login-page .form > .fields,
+#signup-page .form > .fields {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 #login-page .input-field,
@@ -41,8 +75,8 @@
 
 #login-page .input-field > label,
 #signup-page .input-field > label {
-	display: block;
-	margin-left: var(--left-margin);
+	font-size: small;
+	font-weight: 500;
 }
 
 #login-page .issue-container,
@@ -73,13 +107,14 @@
 	margin-bottom: 10px;
 	padding: 10px 20px;
 	border: none;
-	border-radius: 50px;
+	border-radius: 10px;
 	box-sizing: border-box;
+	border: 1px solid var(--neutral-clr-900);
 }
 
 #login-page .input-field > input:focus,
 #signup-page .input-field > input:focus {
-	border: none;
+	border: 1px solid var(--neutral-clr-400);
 	outline: none;
 }
 
@@ -87,14 +122,16 @@
 #signup-page .form > button {
 	cursor: pointer;
 	width: 100%;
-	height: 30px;
-	border: 1px solid hsl(0deg 0% 40%);
+	padding: 8px 10px;
+	background-color: hsl(240deg 50% 50%);
 	border-radius: 5px;
+	color: white;
+	border: none;
 }
 
 #login-page .form > button:hover,
 #signup-page .form > button:hover {
-	background-color: hsl(0deg 0% 80%);
+	background-color: hsl(240, 50%, 30%);
 }
 
 #login-page .form-footer,
@@ -114,5 +151,10 @@
 #login-page .form a,
 #signup-page .form a {
 	color: hsl(240deg 50% 50%);
-	font-weight: bold;
 }
+
+#login-page .form p,
+#signup-page .form p {
+	margin-top: 0;
+	color: var(--neutral-clr-500)
+}	

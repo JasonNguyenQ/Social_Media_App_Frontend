@@ -87,21 +87,18 @@
 
 #profile-page .profile-file,
 #profile-page .profile-actions button {
-	display: inline-block;
 	cursor: pointer;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 50px;
-	outline: none;
-	background-color: hsl(240, 90%, 60%);
+	padding: 8px 25px;
+	background-color: hsl(240deg 50% 50%);
+	border-radius: 5px;
 	color: white;
-	font-family: sans-serif;
-	font-size: 0.9rem;
+	border: none;
+	text-align: center;
 }
 
 #profile-page .profile-file:hover,
 #profile-page .profile-actions button:hover {
-	background-color: hsl(240, 90%, 30%);
+	background-color: hsl(240deg 50% 30%);
 }
 
 #profile-page .friend-status{
@@ -111,14 +108,14 @@
 	border: none;
 	border-radius: 50px;
 	outline: none;
-	background-color: hsl(240, 90%, 60%);
+	background-color: hsl(240deg 50% 50%);
 	color: white;
 	font-family: sans-serif;
 	font-size: 0.9rem;
 }
 
 #profile-page .friend-status:hover{
-	background-color: hsl(240, 90%, 30%);
+	background-color: hsl(240deg 50% 30%);
 }
 
 #profile-page #profile-description {
@@ -129,13 +126,23 @@
 	padding: 10px;
 	font-family: sans-serif;
 	font-size: 1rem;
+	width: 100%;
+	border: none;
+	border-radius: 10px;
 	box-sizing: border-box;
+	border: 1px solid var(--neutral-clr-900);
+}
+
+#profile-page #profile-description:focus {
+	border: 1px solid var(--neutral-clr-400);
+	outline: none;
 }
 
 #profile-page .profile-actions {
 	display: flex;
 	justify-content: flex-end;
 	gap: 10px;
+	font-weight: 500;
 }
 
 #profile-page .profile-actions button[type="reset"] {
@@ -147,10 +154,11 @@
 }
 
 #profile-page .profile-modal {
+	padding: 10px 25px;
 	display: flex;
 	flex-direction: column;
 	position: absolute;
-	top: 35%;
+	top: 50%;
 	left: 50%;
 	width: 60%;
 	margin: 20px;
@@ -159,4 +167,21 @@
 	background-color: white;
 	box-shadow: 0 0 5px 0 hsl(0deg 0% 50%);
 	transform: translate(-50%, -50%);
+	font-size: small;
+	font-weight: bold;
+	z-index: 100000;
+}
+
+#profile-page .profile-modal h2 {
+	font-size: large;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	margin-bottom: 5px;
+}
+
+#profile-page .profile-modal p {
+	margin-top: 0;
+	color: var(--neutral-clr-500);
+	font-weight: 400;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	font-size: medium;
 }

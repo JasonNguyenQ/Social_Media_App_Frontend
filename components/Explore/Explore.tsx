@@ -112,6 +112,8 @@ export default function Explore(){
             </div>
             {toggleState && (
                 <form className="post-form" onSubmit={AddPost}>
+                    <h2>Share Events & Memories</h2>
+                    <p>Post images and share your memories with everyone.</p>
                     <label htmlFor="post-title">Title</label>
                     <input 
                         id="post-title" 
