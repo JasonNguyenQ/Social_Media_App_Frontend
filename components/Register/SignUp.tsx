@@ -88,7 +88,7 @@ export default function SignUp() {
 			<div className="form-wrapper">
 				<AppInfo/>
 				<form onSubmit={Register} className="form">
-					<h3>Create An Account</h3>
+					<h2>Create An Account</h2>
 					<p>
 						Creating an account will allow you to access more features.
 					</p>
