@@ -59,6 +59,7 @@
 }
 
 #messages-page .messages {
+	padding-top: calc(2*var(--reaction-img-size));
 	position: relative;
 	width: 100%;
 	overflow: hidden auto;
