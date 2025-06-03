@@ -134,6 +134,11 @@
 	background-color: hsl(240, 50%, 30%);
 }
 
+#login-page .form > .loading,
+#signup-page .form > .loading {
+	background-color: hsl(240, 50%, 30%);
+}
+
 #login-page .form-footer,
 #signup-page .form-footer {
 	padding: 10px;

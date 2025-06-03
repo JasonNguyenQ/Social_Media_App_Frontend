@@ -3,7 +3,7 @@ import { APP_NAME } from "../../constants/globals";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import InputField from "./Fields";
 import "./SignUp.css";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import AppInfo from "./AppInfo"
 
@@ -13,8 +13,20 @@ export default function Login() {
 	const path = location.state?.from?.pathname || "/profile";
 	const queryClient = useQueryClient();
 
+	const buttonElement = useRef<HTMLButtonElement>(null);
+	const [successfulLogin, setSuccessfulLogin] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(()=>{
+		if (!buttonElement.current) return
+		
+		if(isLoading) buttonElement.current.classList.add('loading');
+		else buttonElement.current.classList.remove('loading');
+	},[isLoading])
+
 	async function Validate(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		setIsLoading(true);
 		const formData = new FormData(e.currentTarget);
 
 		const username = formData.get("username");
@@ -48,10 +60,12 @@ export default function Login() {
 				})
 				sessionStorage.removeItem("activeThread")
 				sessionStorage.setItem("access_token", data["access_token"]);
+				setIsLoading(false);
 				navigate(path);
 			})
-			.catch((err) => {
-				console.log(err);
+			.catch(() => {
+				setSuccessfulLogin(false)
+				setIsLoading(false);
 			});
 	}
 
@@ -66,6 +80,16 @@ export default function Login() {
 				<form onSubmit={Validate} className="form">
 					<h2>Log Into Your Account</h2>
 					<p>Login to be able to create posts, chat privately, and more.</p>
+					{
+						!successfulLogin && 
+						!isLoading &&
+						<span style={{
+							color: "red", 
+							fontSize: "small", 
+							fontWeight: "500"}}>
+								Incorrect username or password
+						</span>
+					}
 					<InputField
 						name="username"
 						type="text"
@@ -82,7 +106,7 @@ export default function Login() {
 						autocomplete="current-password"
 						required
 					/>
-					<button type="submit">Log In</button>
+					<button type="submit" ref={buttonElement}>{isLoading ? "Authenticating..." : "Log In"}</button>
 					<div className="form-footer">
 						<div className="redirect-form">
 							<span>Don't have an account?</span>
