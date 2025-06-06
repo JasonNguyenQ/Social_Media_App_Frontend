@@ -11,7 +11,7 @@ A social media app that allows for instantaneous transmission of messages betwee
 
 [Contact](#contact)
 ## Demo Video
-[![Social Media App Demo](https://github.com/user-attachments/assets/54c08ee2-b777-4c70-b674-4620d5f5fb29)](https://youtu.be/SxD6RfOe2B8)
+[![Social Media App Demo](https://github.com/JasonNguyenQ/Social_Media_App_Frontend/blob/master/ChatTalk.webp)](https://youtu.be/SxD6RfOe2B8)
 
 ## Prerequisites
 
