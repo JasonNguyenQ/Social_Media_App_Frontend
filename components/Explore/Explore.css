@@ -180,6 +180,16 @@
     background-color: hsl(240deg ,50%,30%);
 }
 
+#explore-page .post-form footer>.loading[type="submit"]{
+    cursor: wait;
+    background-color: hsl(240deg ,50%,30%);
+}
+
+#explore-page .post-form footer>.loading[type="reset"]:hover{
+    cursor: default;
+    background-color: var(--neutral-clr-400);
+}
+
 #explore-page .post-form p{
 	margin-top: 0;
 	color: var(--neutral-clr-500)

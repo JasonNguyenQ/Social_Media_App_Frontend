@@ -136,6 +136,7 @@
 
 #login-page .form > .loading,
 #signup-page .form > .loading {
+	cursor: wait;
 	background-color: hsl(240, 50%, 30%);
 }
 

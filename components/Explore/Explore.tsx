@@ -1,44 +1,88 @@
 import { Helmet } from 'react-helmet-async';
 import Navbar from '../Navbar/Navbar';
 import { Link } from "react-router-dom"
-import { APP_NAME } from '../../constants/globals'
+import { ACCESS_KEY, APP_NAME } from '../../constants/globals'
 import Right_Arrow_Icon from "/right_arrow_icon.svg"
 import New_Tab_Icon from "/new_tab_icon.svg"
 import Post from './Post.tsx'
 import { GetPosts, CreatePost, DeletePost } from "../../api/posts.tsx"
 import "./Explore.css"
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { PostProps } from '../../constants/types.tsx';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { PostProps, ProfileProps, UserIdentifier } from '../../constants/types.tsx';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 import ActionMenu from '../Menus/ActionMenu.tsx';
+import fetchUser from '../../api/users.tsx';
 
 export default function Explore(){
     const [toggleState, setToggleState] = useState(false);
     const [activePost, setActivePost] = useState<number>(-1)
     const actionBar = useRef<HTMLDivElement>(null)
+    const discardButton = useRef<HTMLButtonElement>(null);
+    const submitButton = useRef<HTMLButtonElement>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const queryClient = useQueryClient()
+    const token = sessionStorage.getItem(ACCESS_KEY)
+    const userIdentifier : UserIdentifier | undefined = queryClient.getQueryData(["auth", { token }])
 
-    const { data: Posts } = useQuery<PostProps[]>({
-		queryKey: ["posts"],
-		queryFn: GetPosts,
-        staleTime: Infinity,
-        gcTime: 1000*60*5
-	});
+	const id = userIdentifier?.id || -1;
+
+    const [
+        { data: Posts },
+        { data: userInfo },
+    ] : [
+        { data: PostProps[]},
+        { data: ProfileProps }
+    ] = useQueries({
+        queries: [
+            {
+                queryKey: ["posts"],
+                queryFn: GetPosts,
+                staleTime: Infinity,
+                gcTime: 1000*60*5
+            },
+            {
+                queryKey: ["userInfo", { id }],
+                queryFn: async () => await fetchUser(id),
+            }
+        ]
+    })
+
+    const loggedIn = userInfo?.id !== -1
 
     async function AddPost(e: FormEvent<HTMLFormElement>){
         e.preventDefault()
         const formData = new FormData(e.currentTarget);
 		const image = formData.get("image") as File;
+        const title = formData.get("title")
+        const caption = formData.get("caption")
 		const data = new FormData();
-
-        data.append("title", formData.get("title") as string)
-        data.append("caption", formData.get("caption") as string)
+        if(!loggedIn || !title || !caption) return
+        data.append("title", title as string)
+        data.append("caption", caption as string)
         if (image.type.startsWith("image")) {
 			data.append("image", image);
 		}
+        setIsLoading(true)
         await CreatePost(data)
+        if(Posts?.length < 25){
+            queryClient.invalidateQueries({queryKey: ["posts"]})
+        }
+        setIsLoading(false)
         setToggleState(false);
     }
+
+    useEffect(()=>{
+		if (!submitButton.current || !discardButton.current) return
+		
+		if(isLoading){
+            discardButton.current.classList.add('loading');
+            submitButton.current.classList.add('loading');
+        }
+		else{
+            discardButton.current.classList.remove('loading');
+            submitButton.current.classList.remove('loading');
+        }
+	},[isLoading])
 
     useEffect(()=>{
         if(actionBar.current){
@@ -133,8 +177,8 @@ export default function Explore(){
                         type="file"
                         accept="image/png, image/jpg, image/jpeg"/>
                     <footer>
-                        <button type="reset" onClick={()=>{setToggleState(false)}}>Discard</button>
-                        <button type="submit">Post</button>
+                        <button disabled={isLoading} ref={discardButton} type="reset" onClick={()=>{setToggleState(false)}}>Discard</button>
+                        <button type="submit" ref={submitButton}>{isLoading ? "Posting..." : "Post"}</button>
                     </footer>
                 </form>
             )}
