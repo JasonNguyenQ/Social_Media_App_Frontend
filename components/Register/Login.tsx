@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { APP_NAME } from "../../constants/globals";
+import { APP_NAME, BASE_URL } from "../../constants/globals";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import InputField from "./Fields";
 import "./SignUp.css";
@@ -31,7 +31,7 @@ export default function Login() {
 
 		const username = formData.get("username");
 		const password = formData.get("password");
-		fetch("http://localhost:3000/auth/login", {
+		fetch(`${BASE_URL}/auth/login`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
