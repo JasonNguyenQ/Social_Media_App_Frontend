@@ -7,6 +7,8 @@ import Explore_Icon from "/explore_icon.svg"
 import Person_Icon from "/person_icon.svg"
 import Message_Icon from "/message_icon.svg"
 import Settings_Icon from "/settings_icon.svg"
+import Menu_Icon from "/menu_icon.svg"
+import { useToggle } from "../../hooks/useToggle";
 
 type returnedUser = {
 	id: number;
@@ -16,6 +18,8 @@ type returnedUser = {
 export default function Navbar() {
 	const [focused, setFocused] = useState<boolean>(false);
 	const [search, setSearch] = useDebounce<string>("", 150);
+	const linksRef = useRef<HTMLUListElement>(null)
+	const [isClosed, setIsClosed] = useToggle(false);
 	const [matchedUsers, setMatchedUsers] = useState<returnedUser[]>([]);
 	const container = useRef<HTMLDivElement>(null);
 
@@ -23,6 +27,12 @@ export default function Navbar() {
 		const element = e.target as HTMLElement;
 		setFocused(element.closest(".search-container") !== null);
 	}
+
+	useEffect(()=>{
+		if(!linksRef.current) return
+		if(isClosed) linksRef.current.classList.add("closed")
+		else linksRef.current.classList.remove("closed")
+	},[isClosed])
 
 	useEffect(() => {
 		document.body.addEventListener("mousedown", handleFocus);
@@ -84,20 +94,23 @@ export default function Navbar() {
 				</div>
 			</div>
 
-			<ul className="links">
-				<li>
-					<Link to="/explore"><img src={Explore_Icon} alt="explore icon"/><span>Explore</span></Link>
-				</li>
-				<li>
-					<Link to="/profile"><img src={Person_Icon} alt="profile icon"/><span>Profile</span></Link>
-				</li>
-				<li>
-					<Link to="/messages"><img src={Message_Icon} alt="message icon"/><span>Messages</span></Link>
-				</li>
-				<li>
-					<Link to="/settings"><img src={Settings_Icon} alt="settings icon"/><span>Settings</span></Link>
-				</li>
-			</ul>
+			<div className="action-bar">
+				<span onClick={setIsClosed}><img src={Menu_Icon} alt="menu_icon"/></span>
+				<ul className="links" ref={linksRef}>
+					<li>
+						<Link to="/explore"><img src={Explore_Icon} alt="explore icon"/><span>Explore</span></Link>
+					</li>
+					<li>
+						<Link to="/profile"><img src={Person_Icon} alt="profile icon"/><span>Profile</span></Link>
+					</li>
+					<li>
+						<Link to="/messages"><img src={Message_Icon} alt="message icon"/><span>Messages</span></Link>
+					</li>
+					<li>
+						<Link to="/settings"><img src={Settings_Icon} alt="settings icon"/><span>Settings</span></Link>
+					</li>
+				</ul>
+			</div>
 		</nav>
 	);
 }

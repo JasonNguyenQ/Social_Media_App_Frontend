@@ -63,7 +63,17 @@
 	object-fit: contain;
 }
 
+#navbar .action-bar{
+	position: relative;;
+}
+
+#navbar .action-bar > span{
+	display: none;
+	cursor: pointer;
+}
+
 #navbar .links {
+	background-color: var(--nav-background);
 	display: flex;
 	gap: 20px;
 	list-style-type: none;
@@ -159,4 +169,21 @@
 
 #navbar .search-results a:hover {
 	background-color: var(--neutral-clr-950);
+}
+
+@media screen and (width <= 750px){
+	#navbar .action-bar > span{
+		display: block;
+	}
+	#navbar .links {
+		right: 0%;
+		position: absolute;
+		flex-direction: column;
+		padding: 15px 20px;
+		border-radius: 5px;
+		box-shadow: 0px 0px 10px 5px var(--neutral-clr-900);
+	}
+	#navbar .closed {
+		display: none;
+	}
 }
